@@ -16,7 +16,7 @@
 </script>
 
 {#if count > 0}
-    <h1>{count}</h1>
+   <h1>{count}</h1>
 {:else}
-    {@render display()}
+   {@render display()}
 {/if}
