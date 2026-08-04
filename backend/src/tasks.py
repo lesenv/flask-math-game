@@ -21,6 +21,9 @@ class Multiply(_Task):
         self.b = b
         self.c = a * b
 
+    def string(self):
+        return f"{self.a} * {self.b}"
+
     def check(self, num):
         return num == self.c
 
@@ -29,7 +32,7 @@ class Multiply(_Task):
             'a': self.a,
             'b': self.b,
             'c': self.c,
-            'symbol': "*"
+            'str': self.string()
         }
 
 class Division(_Task):
@@ -37,6 +40,9 @@ class Division(_Task):
         self.x = a * b
         self.y = b
         self.z = a
+
+    def string(self):
+        return f"{self.x} / {self.y}"
 
     def check(self, num):
         return num == self.z
@@ -46,7 +52,7 @@ class Division(_Task):
             'a': self.x,
             'b': self.y,
             'c': self.z,
-            'symbol': "/"
+            'str': self.string()
         }
 
 def choose_task():
