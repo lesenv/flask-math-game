@@ -1,5 +1,6 @@
 <script>
   import { socketState } from '../socket.svelte';
+    import ChoseTasks from './ChooseTasks.svelte';
 
   let { match } = $props();
 
@@ -17,9 +18,13 @@
   });
 
 </script>
-
+<div>
 <form onsubmit={handleSubmit}>
   {match.task.str} = 
   <input type="number" bind:value={result} bind:this={inputRef} />
   <button type="submit" style="display: none;">Solve</button>
 </form>
+</div>
+<div>
+  <ChooseTasks />
+</div>

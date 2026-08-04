@@ -31,6 +31,10 @@ class SocketState {
     submitMessage(message) {
         this.socket?.emit("send_message", { message });
     }
+
+    sidebar_tasks() {
+        this.socket?.emit("get_sidebar_tasks", { get_sidebar });
+    }
 }
 
 export const socketState = new SocketState();
