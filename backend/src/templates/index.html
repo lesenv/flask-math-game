@@ -60,6 +60,13 @@
 			<form name="user-form" style="display: inline;">
 				<label for="username">Username</label>
 				<input id="username" name="username" placeholder="Username" />
+				<label for="tasktype">Task</label>
+				<select id="tasktype" name="tasktype">
+          <option value="" disabled selected>Select a room type</option>
+          <option value="multiply">Multiplication</option>
+          <option value="divide">Division</option>
+          <option value="random">Random</option>
+				</select>
 				<label for="roomname">Roomname</label>
 				<input id="roomname" name="roomname" placeholder="Roomname" />
 				<button type="submit">Join room</button>
@@ -119,8 +126,7 @@
 			socket.on('task', data => {
 				const html = `
 				<form name="task">
-					<input type="number" name="a" value="${data.task.a}" readonly /> * 
-					<input type="number" name="b" value="${data.task.b}" readonly /> = 
+					${data.task.expr}
 					<input type="number" name="result" value="" />
 					<button type="submit" style="display: none;">Send</button>
 				</form>
@@ -148,7 +154,8 @@
 					const formData = new FormData(event.target);
 					const username = formData.get('username');
 					const roomname = formData.get('roomname');
-					socket.emit('join', {username, roomname});
+					const tasktype = formData.get('tasktype');
+					socket.emit('join', {username, roomname, tasktype});
 				});
 
 			document.getElementById('btn-leave')

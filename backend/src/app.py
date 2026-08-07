@@ -26,10 +26,10 @@ socketio = SocketIO(app,
 def index():
 	return app.send_static_file('index.html')
 
-@app.route('/dev')
-def dev_index():
-	session.clear() # deprecated 
-	return render_template('index.html') 
+# @app.route('/dev')
+# def dev_index():
+# 	session.clear() # deprecated 
+# 	return render_template('index.html') 
 
 
 @socketio.on('connect')

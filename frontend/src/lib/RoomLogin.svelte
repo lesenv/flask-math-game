@@ -22,7 +22,7 @@
             <input id="username" bind:value={username} placeholder="Username" />
         </div>
         <div class="form-control" style="margin-bottom: 0;">
-            <label for="tasktype" class="src-only">Username</label>
+            <label for="tasktype" class="src-only">Task</label>
             <select id="tasktype" bind:value={tasktype}>
                 <option value="" disabled>Select a room type</option>
                 <option value="multiply">Multiplication</option>
