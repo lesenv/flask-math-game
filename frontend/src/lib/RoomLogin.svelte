@@ -4,10 +4,11 @@
 
   let username = $state("");
   let roomname = $state("");
+  let tasktype = $state("");
 
   function handleSubmit(event) {
   	event.preventDefault();
-  	socketState.joinRoom(username, roomname);
+  	socketState.joinRoom(username, roomname, tasktype);
   }
 </script>
 
@@ -19,6 +20,15 @@
         <div class="form-control" style="margin-bottom: 0;">
             <label for="username" class="src-only">Username</label>
             <input id="username" bind:value={username} placeholder="Username" />
+        </div>
+        <div class="form-control" style="margin-bottom: 0;">
+            <label for="tasktype" class="src-only">Username</label>
+            <select id="tasktype" bind:value={tasktype}>
+                <option value="" disabled>Select a room type</option>
+                <option value="multiply">Multiplication</option>
+                <option value="divide">Division</option>
+                <option value="random">Random</option>
+            </select>
         </div>
         <div class="form-control">
             <label for="roomname" class="src-only">Roomname</label>
@@ -40,7 +50,7 @@
     margin-bottom: .6em;
 }
 
-label, input, button {
+label, input, button, select {
     box-sizing:border-box;
     width: 100%;
     padding: 1em;
@@ -60,6 +70,11 @@ input#username {
 input#roomname {
     border-top-right-radius: 0;
     border-top-left-radius: 0;
+}
+
+select#tasktype {
+    -webkit-appearance: none;
+    -webkit-border-radius: 0px;
 }
 
 </style>

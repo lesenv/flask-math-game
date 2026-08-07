@@ -16,8 +16,8 @@ class SocketState {
         this.socket = null;
     }
 
-    joinRoom(username, roomname) {
-        this.socket?.emit("join", { username, roomname });
+    joinRoom(username, roomname, tasktype) {
+        this.socket?.emit("join", { username, roomname, tasktype });
     }
 
     leaveRoom() {

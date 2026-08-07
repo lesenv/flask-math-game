@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, session
 from flask_session import Session
 from flask_socketio import SocketIO, emit, join_room, leave_room
 from models import Match as _Match, Room, User
+from tasks import TaskType 
 
 
 app = Flask(__name__, 
@@ -74,6 +75,7 @@ def on_join(data):
 
 	username = data['username'].strip()
 	roomcode = data.get('roomname', None)
+	roomtype = data.get('tasktype', '')
 
 	if not username:
 		return
@@ -85,11 +87,15 @@ def on_join(data):
 	room = None
 	if roomcode:
 		room = _Match.find_by_code(roomcode)
-	if not room:		
-		room = _Match.find_open_room()
+	if not room:
+		task_type = TaskType.from_string(roomtype)
+		if task_type:
+			room = _Match.find_open_room_by_type(task_type)
+		else:
+			room = _Match.find_open_room()
 
 	if not room or room.is_closed:
-		room = _Match.create()
+		room = _Match.create(TaskType.from_string(roomtype) or TaskType.RANDOM)
 	room.add_member(user)
 
 	join_room(room.code)
@@ -105,6 +111,7 @@ def on_join(data):
 			{ 
 				'state': 'closed', 
 				'code': room.code, 
+				'type': str(room.task_type), 
 				'members': [
 					{ 
 						'sid': m.sid, 
@@ -120,7 +127,7 @@ def on_join(data):
 		emit('task', 
 			{
 				'attempts': attempts, 
-				'task': task._asdict(), 
+				'task': task.to_dict(), 
 				'success': success
 			}, 
 			room=room.code
@@ -132,6 +139,7 @@ def on_join(data):
 			{ 
 				'state': 'open', 
 				'code': room.code, 
+				'type': str(room.task_type), 
 				'members': [
 					{ 
 						'sid': m.sid, 
@@ -158,6 +166,7 @@ def on_leave(data):
 			{ 
 				'state': 'open', 
 				'code': room.code, 
+				'type': str(room.task_type), 
 				'members': [
 					{ 
 						'sid': m.sid, 
@@ -203,7 +212,7 @@ def on_solve(data):
 	emit('task', 
 		{
 			'attempts': attempts, 
-			'task': task._asdict(), 
+			'task': task.to_dict(), 
 			'success': success
 		}, 
 		room=room.code

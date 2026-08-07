@@ -19,7 +19,7 @@
 </script>
 
 <form onsubmit={handleSubmit}>
-  {match.task.a} * {match.task.b} = 
+  {match.task.expr} = 
   <input type="number" bind:value={result} bind:this={inputRef} />
   <button type="submit" style="display: none;">Solve</button>
 </form>
