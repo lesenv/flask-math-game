@@ -136,10 +136,10 @@ class Match(Room):
 		self._task = None 
 
 	@property
-	def attemmpts(self):
+	def attempts(self):
 		return self._attempts
 	
-	@attemmpts.setter
+	@attempts.setter
 	def attempts(self, value):
 		self._attempts = value
 
