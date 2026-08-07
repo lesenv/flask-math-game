@@ -25,6 +25,7 @@
             <label for="tasktype" class="src-only">Task</label>
             <select id="tasktype" bind:value={tasktype}>
                 <option value="" disabled>Select a room type</option>
+                <option value="add">Addition</option> 
                 <option value="multiply">Multiplication</option>
                 <option value="divide">Division</option>
                 <option value="random">Random</option>

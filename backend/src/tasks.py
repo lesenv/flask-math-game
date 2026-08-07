@@ -6,8 +6,9 @@ from typing import Any, Self
 
 
 class TaskType(StrEnum):
-	MULTIPLY = 'multiply'
+	ADD = 'add'
 	DIVIDE = 'divide'
+	MULTIPLY = 'multiply'
 	RANDOM = 'random'
 
 	@classmethod
@@ -33,15 +34,19 @@ class Task:
 	def to_dict(self) -> dict[str, Any]:
 		return {**asdict(self), 'expr': str(self)}
 
-def multiply(a: int, b: int) -> Task:
-	return Task(a, b, a * b, '*')
+def add(a: int, b: int) -> Task:
+	return Task(a, b, a + b, '+')
 
 def divide(a: int, b: int) -> Task:
 	return Task(a * b, b, a, '/')
 
+def multiply(a: int, b: int) -> Task:
+	return Task(a, b, a * b, '*')
+
 TASKS: dict[TaskType, Callable[[int, int], Task]] = {
-	TaskType.MULTIPLY: multiply, 
+	TaskType.ADD: add, 
 	TaskType.DIVIDE: divide, 
+	TaskType.MULTIPLY: multiply, 
 }
 
 _TASK_TYPES = tuple(TASKS.keys())
@@ -50,7 +55,12 @@ def choose_task(task_type: TaskType) -> Task:
 	if task_type is TaskType.RANDOM:
 		task_type = random.choice(_TASK_TYPES)
 
-	a = random.randint(1, 10) 
-	b = random.randint(1, 10)
+	match task_type:
+		case TaskType.ADD:
+			a = random.randint(1, 99)
+			b = random.randint(1, 100 - a)
+		case _:
+			a = random.randint(1, 10) 
+			b = random.randint(1, 10)
 
 	return TASKS[task_type](a, b)
