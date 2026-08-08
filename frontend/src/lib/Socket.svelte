@@ -90,7 +90,7 @@
         <div class="top-bar">
           <Points points={user.points} />
           <div class="spacer"></div>
-          <div>Type: <span style="text-transform: capitalize;">{room.type}</span></div>
+          <div>Task: <span style="text-transform: capitalize;">{room.type}</span></div>
           <div>Room: <span>{room.code}</span></div>
           <div><button type="button" onclick={ leave }>Leave</button></div>
         </div>
