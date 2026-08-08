@@ -75,7 +75,7 @@ def on_join(data):
 
 	username = data['username'].strip()
 	roomcode = data.get('roomname', None)
-	roomtype = data.get('tasktype', '')
+	task_type = TaskType.from_string(data.get('tasktype', ''))
 
 	if not username:
 		return
@@ -88,14 +88,13 @@ def on_join(data):
 	if roomcode:
 		room = _Match.find_by_code(roomcode)
 	if not room:
-		task_type = TaskType.from_string(roomtype)
 		if task_type:
 			room = _Match.find_open_room_by_type(task_type)
 		else:
 			room = _Match.find_open_room()
 
 	if not room or room.is_closed:
-		room = _Match.create(TaskType.from_string(roomtype) or TaskType.RANDOM)
+		room = _Match.create(task_type or TaskType.RANDOM)
 	room.add_member(user)
 
 	join_room(room.code)
