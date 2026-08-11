@@ -28,8 +28,12 @@ class Task:
 	def __str__(self) -> str:
 		return f'{self.left} {self.op} {self.right}'
 
-	def check(self, num: int) -> bool:
-		return num == self.result
+	def check(self, value: str) -> bool:
+		try:
+			value = value.strip()
+			return self.result == int(value)
+		except ValueError:
+			return False
 
 	def to_dict(self) -> dict[str, Any]:
 		return {**asdict(self), 'expr': str(self)}

@@ -143,11 +143,11 @@ class Match(Room):
 		self._task = choose_task(self._task_type)
 		return self._task
 
-	def process(self, num: int) -> tuple[Task, int, bool]:
+	def process(self, value: str) -> tuple[Task, int, bool]:
 		if self._task is None:
 			self.create_task()
 
-		success = self._task.check(num)
+		success = self._task.check(value)
 		if success:
 			self._task = self.create_task()
 			self._attempts = 0

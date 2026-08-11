@@ -206,8 +206,8 @@ def on_solve(data):
 		return 
 
 	# Process the attempted solution here!
-	num = int(data['c'])
-	task, attempts, success = room.process(num)
+	value = data['c']
+	task, attempts, success = room.process(value)
 	emit('task', 
 		{
 			'attempts': attempts, 
