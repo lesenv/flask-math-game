@@ -30,6 +30,7 @@
                 <option value="multiply">Multiplication</option>
                 <option value="divide">Division</option>
                 <option value="reduce">Reduce Fractions</option>
+                <option value="equation">Equations</option>
                 <option value="random">Random</option>
             </select>
         </div>

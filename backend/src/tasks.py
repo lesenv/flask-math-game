@@ -1,11 +1,16 @@
 import random 
 from collections.abc import Callable
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace 
 from enum import StrEnum
 from fractions import Fraction
 from math import gcd
 from typing import Any, Self
 
+
+class HiddenSide(StrEnum):
+	LEFT = 'left'
+	RIGHT = 'right'
+	RESULT = 'result'
 
 class TaskType(StrEnum):
 	ADD = 'add'
@@ -13,6 +18,7 @@ class TaskType(StrEnum):
 	DIVIDE = 'divide'
 	MULTIPLY = 'multiply'
 	REDUCE = 'reduce'
+	EQUATION = 'equation' 
 	RANDOM = 'random'
 
 	@classmethod
@@ -26,17 +32,24 @@ class TaskType(StrEnum):
 class Task:
 	left: int
 	right: int
-	result: int| Fraction
+	result: int | Fraction
 	op: str
+	hidden_side: HiddenSide = HiddenSide.RESULT 
 
 	def __str__(self) -> str:
-		return f'{self.left} {self.op} {self.right}'
+		match self.hidden_side:
+			case HiddenSide.LEFT:
+				return f'x {self.op} {self.right} = {self.result}'
+			case HiddenSide.RIGHT:
+				return f'{self.left} {self.op} x = {self.result}'
+			case HiddenSide.RESULT:
+				return f'{self.left} {self.op} {self.right} = ?'
 
 	def check(self, value: str) -> bool:
 		try:
 			value = value.strip()
 
-			target = self.result
+			target = getattr(self, self.hidden_side.value)
 
 			if '/' in value:
 				numerator_str, denominator_str = value.split('/', maxsplit=1)
@@ -56,7 +69,7 @@ class Task:
 			return answer == target
 		except ValueError:
 			return False
-
+	
 	def to_dict(self) -> dict[str, Any]:
 		def serialize(value: Any) -> Any:
 			if isinstance(value, Fraction):
@@ -91,7 +104,21 @@ TASKS: dict[TaskType, Callable[[int, int], Task]] = {
 	TaskType.REDUCE: reduce_fraction, 
 }
 
-_TASK_TYPES = tuple(TASKS.keys())
+_RANDOM_TASK_TYPES = (
+	TaskType.ADD,
+	TaskType.SUBTRACT,
+	TaskType.DIVIDE,
+	TaskType.MULTIPLY,
+	TaskType.REDUCE,
+	TaskType.EQUATION,
+)
+
+_EQUATION_BASE_TYPES = (
+	TaskType.ADD,
+	TaskType.SUBTRACT,
+	TaskType.MULTIPLY,
+	TaskType.DIVIDE,
+)
 
 def _generate_numbers(task_type: TaskType) -> tuple[int, int]:
 	match task_type:
@@ -117,7 +144,23 @@ def _generate_numbers(task_type: TaskType) -> tuple[int, int]:
 
 def choose_task(task_type: TaskType) -> Task:
 	if task_type is TaskType.RANDOM:
-		task_type = random.choice(_TASK_TYPES)
+		task_type = random.choice(_RANDOM_TASK_TYPES)
+
+	if task_type is TaskType.EQUATION: 
+		return choose_equation_task() 
 
 	a, b = _generate_numbers(task_type)
 	return TASKS[task_type](a, b)
+
+def choose_equation_task() -> Task:
+	task_type = random.choice(_EQUATION_BASE_TYPES)
+
+	a, b = _generate_numbers(task_type)
+	base_task = TASKS[task_type](a, b)
+
+	return replace(
+		base_task,
+		hidden_side=random.choice(
+			(HiddenSide.LEFT, HiddenSide.RIGHT)
+		),
+	)
