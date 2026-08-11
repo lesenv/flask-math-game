@@ -20,6 +20,6 @@
 
 <form onsubmit={handleSubmit}>
   {match.task.expr} = 
-  <input type="number" bind:value={result} bind:this={inputRef} />
+  <input type="text" bind:value={result} bind:this={inputRef} pattern="\s*[0-9]+(?:\s*/\s*[0-9]+)?\s*" />
   <button type="submit" style="display: none;">Solve</button>
 </form>
