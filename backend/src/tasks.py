@@ -7,6 +7,7 @@ from typing import Any, Self
 
 class TaskType(StrEnum):
 	ADD = 'add'
+	SUBTRACT = 'subtract'
 	DIVIDE = 'divide'
 	MULTIPLY = 'multiply'
 	RANDOM = 'random'
@@ -41,6 +42,9 @@ class Task:
 def add(a: int, b: int) -> Task:
 	return Task(a, b, a + b, '+')
 
+def subtract(a: int, b: int) -> Task:
+	return Task(a, b, a - b, '-')
+
 def divide(a: int, b: int) -> Task:
 	return Task(a * b, b, a, '/')
 
@@ -49,6 +53,7 @@ def multiply(a: int, b: int) -> Task:
 
 TASKS: dict[TaskType, Callable[[int, int], Task]] = {
 	TaskType.ADD: add, 
+	TaskType.SUBTRACT: subtract,
 	TaskType.DIVIDE: divide, 
 	TaskType.MULTIPLY: multiply, 
 }
@@ -63,6 +68,9 @@ def choose_task(task_type: TaskType) -> Task:
 		case TaskType.ADD:
 			a = random.randint(1, 99)
 			b = random.randint(1, 100 - a)
+		case TaskType.SUBTRACT:
+			a = random.randint(2, 100)
+			b = random.randint(1, a)
 		case _:
 			a = random.randint(1, 10) 
 			b = random.randint(1, 10)
