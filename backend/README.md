@@ -2,6 +2,11 @@
 
 A prototype of a turn-based math game for learning multiplication, based on chat rooms and written in Flask.
 
+```bash
+cd frontend
+npm run dev
+```
+
 ## Setup and run the app (Linux/MacOS)
 
 ```bash
