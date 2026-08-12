@@ -47,7 +47,7 @@ class User:
         return None
 
 
-MAX_ROOM_MEMBERS = 2
+MAX_ROOM_MEMBERS = 1
 
 class Room:
     def __init__(self, code):
