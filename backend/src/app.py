@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, session
 from flask_session import Session
 from flask_socketio import SocketIO, emit, join_room, leave_room
 from models import Match as _Match, Room, User
+from tasks import TaskType 
 
 
 app = Flask(__name__, 
@@ -25,10 +26,10 @@ socketio = SocketIO(app,
 def index():
 	return app.send_static_file('index.html')
 
-@app.route('/dev')
-def dev_index():
-	session.clear() # deprecated 
-	return render_template('index.html') 
+# @app.route('/dev')
+# def dev_index():
+# 	session.clear() # deprecated 
+# 	return render_template('index.html') 
 
 
 @socketio.on('connect')
@@ -74,6 +75,7 @@ def on_join(data):
 
 	username = data['username'].strip()
 	roomcode = data.get('roomname', None)
+	task_type = TaskType.from_string(data.get('tasktype', ''))
 
 	if not username:
 		return
@@ -85,11 +87,14 @@ def on_join(data):
 	room = None
 	if roomcode:
 		room = _Match.find_by_code(roomcode)
-	if not room:		
-		room = _Match.find_open_room()
+	if not room:
+		if task_type:
+			room = _Match.find_open_room_by_type(task_type)
+		else:
+			room = _Match.find_open_room()
 
 	if not room or room.is_closed:
-		room = _Match.create()
+		room = _Match.create(task_type or TaskType.RANDOM)
 	room.add_member(user)
 
 	join_room(room.code)
@@ -105,6 +110,7 @@ def on_join(data):
 			{ 
 				'state': 'closed', 
 				'code': room.code, 
+				'type': str(room.task_type), 
 				'members': [
 					{ 
 						'sid': m.sid, 
@@ -120,7 +126,7 @@ def on_join(data):
 		emit('task', 
 			{
 				'attempts': attempts, 
-				'task': task._asdict(), 
+				'task': task.to_dict(), 
 				'success': success
 			}, 
 			room=room.code
@@ -132,6 +138,7 @@ def on_join(data):
 			{ 
 				'state': 'open', 
 				'code': room.code, 
+				'type': str(room.task_type), 
 				'members': [
 					{ 
 						'sid': m.sid, 
@@ -158,6 +165,7 @@ def on_leave(data):
 			{ 
 				'state': 'open', 
 				'code': room.code, 
+				'type': str(room.task_type), 
 				'members': [
 					{ 
 						'sid': m.sid, 
@@ -198,12 +206,12 @@ def on_solve(data):
 		return 
 
 	# Process the attempted solution here!
-	num = int(data['c'])
-	task, attempts, success = room.process(num)
+	value = data['c']
+	task, attempts, success = room.process(value)
 	emit('task', 
 		{
 			'attempts': attempts, 
-			'task': task._asdict(), 
+			'task': task.to_dict(), 
 			'success': success
 		}, 
 		room=room.code

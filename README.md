@@ -1,6 +1,6 @@
 # Flask Math Game
 
-A prototype of a turn-based math game for learning multiplication, based on chat rooms and written in Flask and Svelte 5.
+A prototype of a turn-based math game based on chatrooms and written in Flask and Svelte 5.
 
 ## Install the dependencies and run or build the frontend
 ```bash
