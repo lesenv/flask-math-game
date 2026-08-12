@@ -1,6 +1,5 @@
 <script>
   import { socketState } from '../socket.svelte';
-    import ChoseTasks from './ChooseTasks.svelte';
 
   let { match } = $props();
 
@@ -9,7 +8,7 @@
 
   function handleSubmit(event) {
   	event.preventDefault();
-  	socketState.submitResult(result);
+  	socketState.submitResults(result);
     result = null;
   }
 
@@ -24,7 +23,8 @@
   <input type="number" bind:value={result} bind:this={inputRef} />
   <button type="submit" style="display: none;">Solve</button>
 </form>
-</div>
-<div>
-  <ChooseTasks />
+<ul>
+  <li>poesjfdpm in GameRoom</li>
+  <li>oihasdom</li>
+</ul>
 </div>

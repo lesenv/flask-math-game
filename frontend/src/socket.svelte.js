@@ -24,7 +24,7 @@ class SocketState {
         this.socket?.emit("leave", {});
     }
 
-    submitResult(result) {
+    submitResults(result) {
         this.socket?.emit("solve", { c: result });
     }
 

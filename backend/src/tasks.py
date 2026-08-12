@@ -8,14 +8,7 @@ def get_2_ints(_from: int = 1, _to: int = 10) -> list[int]:
     if _from > _to: _from, _to = _to, _from
     return [random.randint(_from, _to), random.randint(_from, _to)]
 
-class _Task(Protocol):
-    symbol: str
-    
-    @abstractmethod
-    def check(self) -> int:
-        ...
-
-class Multiply(_Task):
+class Multiply():
     def __init__(self, a, b):
         self.a = a
         self.b = b
@@ -35,7 +28,7 @@ class Multiply(_Task):
             'str': self.string()
         }
 
-class Division(_Task):
+class Division():
     def __init__(self, a, b):
         self.x = a * b
         self.y = b
@@ -61,4 +54,9 @@ def choose_task():
                     random.randint(1, 10), 
                     random.randint(1, 10))
     return _Task
+
+all_tasks = [Multiply, Division]
+
+for task in all_tasks:
+    task.sidebar_tasks = all_tasks
         
