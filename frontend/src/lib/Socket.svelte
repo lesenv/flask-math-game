@@ -8,9 +8,11 @@
   import Points from './Points.svelte';
   import GameRoom from './GameRoom.svelte'
   import Countdown from './Countdown.svelte'
+  import ChooseTasks from './ChooseTasks.svelte';
   import { onMount } from 'svelte';
 
   let match = $state();
+  let sidebar_tasks = $state(["Division"]);
 
   function leave() {
     socketState.leaveRoom();
@@ -32,7 +34,7 @@
     socket.on("room", onRoom);
 
     const onUser = (data) => {
-      console.log(data);
+      console.log("data_user", data);
       Object.assign(user, data);
       Object.assign(room.members.find((item) => item.sid === data.sid) || {}, data);
     };
@@ -40,17 +42,28 @@
     socket.on("user", onUser);
 
     const onTask = (data) => {
-      console.log(data);
+      console.log("data_Task", data);
       match = data;
+      sidebar_tasks = match.sidebar_tasks
+      //console.log("XXXXXXX", sidebar_tasks)
     };
 
     socket.on("task", onTask);
+
+    const onSidebar_tasks = (data) => {
+      console.log("data_sidebar: ", data)
+      sidebar_tasks = match.sidebar_tasks
+      console.log("sidebar: ", sidebar_tasks)
+    }
+
+    socket.on("get_sidebar_tasks", onSidebar_tasks);
 
     return () => {
       socketState.leaveRoom();
       socket.off("room", onRoom);
       socket.off("user", onUser);
       socket.off("task", onTask);
+      socket.off("get_sidebar_tasks", onSidebar_tasks);
       socketState.disconnect();
     };
   });
@@ -101,6 +114,7 @@
               <Countdown>
                 {#snippet display()}
                   <GameRoom match={match} />
+                  <ChooseTasks sidebar_tasks={ room.sidebar_tasks } />
                 {/snippet}
               </Countdown>
             {/if}

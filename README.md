@@ -5,7 +5,7 @@ A prototype of a turn-based math game for learning multiplication, based on chat
 ## Install the dependencies and run or build the frontend
 ```bash
 cd frontend 
-npm install
+#npm install # just the first time!!
 npm run dev
 # or 
 npm run build 

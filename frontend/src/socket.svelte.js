@@ -24,12 +24,16 @@ class SocketState {
         this.socket?.emit("leave", {});
     }
 
-    submitResult(result) {
+    submitResults(result) {
         this.socket?.emit("solve", { c: result });
     }
 
     submitMessage(message) {
         this.socket?.emit("send_message", { message });
+    }
+
+    sidebar_tasks() {
+        this.socket?.emit("get_sidebar_tasks", { get_sidebar });
     }
 }
 

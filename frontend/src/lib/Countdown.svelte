@@ -9,7 +9,7 @@
 
         const timeout = setTimeout(() => {
             count--;
-        }, 1000);
+        }, 1); //000); // was 1000 to count in seconds
 
         return () => clearTimeout(timeout);
     });
