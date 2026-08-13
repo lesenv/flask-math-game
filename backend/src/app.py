@@ -1,12 +1,12 @@
 from flask import Flask, render_template, request, session
 from flask_session import Session
 from flask_socketio import SocketIO, emit, join_room, leave_room
-from models import Match as _Match, Room, User
+from models import MAX_ROUNDS, Match as _Match, Room, User
 from tasks import TaskType 
 
 
 app = Flask(__name__, 
-    static_url_path='', 
+	static_url_path='', 
 )
 
 app.config.from_mapping(
@@ -110,7 +110,7 @@ def on_join(data):
 			{ 
 				'state': 'closed', 
 				'code': room.code, 
-				'type': str(room.task_type), 
+				'type': room.task_type, 
 				'members': [
 					{ 
 						'sid': m.sid, 
@@ -126,19 +126,21 @@ def on_join(data):
 		emit('task', 
 			{
 				'attempts': attempts, 
+				'round': room.round, 
+				'max_rounds': MAX_ROUNDS, 
 				'task': task.to_dict(), 
 				'success': success
 			}, 
 			room=room.code
 		)
-		emit('user', { 'username': user.username, 'sid': user.sid, 'points': user.points }, room=room.code)
+		emit('user', { 'username': user.username, 'sid': user.sid, 'points': user.points }, room=user.sid)
 
 	else:
 		emit('room', 
 			{ 
 				'state': 'open', 
 				'code': room.code, 
-				'type': str(room.task_type), 
+				'type': room.task_type, 
 				'members': [
 					{ 
 						'sid': m.sid, 
@@ -149,7 +151,7 @@ def on_join(data):
 			}, 
 			room=room.code
 		)
-		emit('user', { 'username': user.username, 'sid': user.sid, 'points': user.points }, room=room.code)
+		emit('user', { 'username': user.username, 'sid': user.sid, 'points': user.points }, room=user.sid)
 
 @socketio.on('leave')
 def on_leave(data):
@@ -165,7 +167,7 @@ def on_leave(data):
 			{ 
 				'state': 'open', 
 				'code': room.code, 
-				'type': str(room.task_type), 
+				'type': room.task_type, 
 				'members': [
 					{ 
 						'sid': m.sid, 
@@ -207,20 +209,104 @@ def on_solve(data):
 
 	# Process the attempted solution here!
 	value = data['c']
-	task, attempts, success = room.process(value)
+	task, attempts, success, finished = room.process(value)
+
+	if success:
+		user.points += 10 
+		emit('score', { 'username': user.username, 'sid': user.sid, 'points': user.points }, room=room.code) 
+
+	if finished:
+		emit('game_over', 
+			{
+				'rounds': room.round, 
+				'members': [
+					{
+						'sid': m.sid, 
+						'username': m.username, 
+						'points': m.points, 
+						'ready': m.sid in room.ready_members
+					}
+					for m in room._members.values()
+				]
+			}, 
+			room=room.code
+		)
+
+		return 
+
 	emit('task', 
 		{
 			'attempts': attempts, 
+			'round': room.round, 
+			'max_rounds': MAX_ROUNDS, 
 			'task': task.to_dict(), 
 			'success': success
 		}, 
 		room=room.code
 	)
-	if success:
-		user.points += 10
-		emit('user', { 'username': user.username, 'sid': user.sid, 'points': user.points }, room=room.code) #user.sid)
-		# <- room ?
 
+@socketio.on('ready')
+def on_ready():
+	user = User.find_by_sid(request.sid)
+	room = _Match.find_by_code(session.get('code'))
+
+	if user is None or room is None:
+		return
+
+	# Ready nur nach Spielende akzeptieren
+	if not room.is_finished:
+		return
+
+	room.set_ready(user)
+
+	emit(
+		'ready_state',
+		{
+			'members': [
+				{
+					'sid': m.sid,
+					'username': m.username,
+					'ready': m.sid in room.ready_members,
+					'points': m.points
+				}
+				for m in room._members.values()
+			]
+		},
+		room=room.code
+	)
+
+	if not room.all_ready:
+		return 
+
+	room.reset()
+	emit('room', 
+		{ 
+			'state': 'open' if room.is_open else 'closed', 
+			'code': room.code, 
+			'type': room.task_type, 
+			'members': [
+				{ 
+					'sid': m.sid, 
+					'username': m.username, 
+					'points': m.points
+				} for m in room._members.values()
+			] 
+		}, 
+		room=room.code
+	)
+
+	task = room.create_task()
+	emit(
+		'task',
+		{
+			'attempts': 0,
+			'round': 0,
+			'max_rounds': MAX_ROUNDS,
+			'task': task.to_dict(),
+			'success': False
+		},
+		room=room.code
+	)
 
 if __name__ == "__main__":
 	socketio.run(app, debug=True)

@@ -11,6 +11,8 @@
 	import { onMount } from 'svelte';
 
 	let match = $state();
+	let gameOver = $state(null); 
+	let readyMembers = $state([]);
 
 	function leave() {
 		socketState.leaveRoom();
@@ -21,12 +23,16 @@
 		const socket = socketState.connect();
 
 		socket.on("connect", () => {
-				console.log("Verbunden:", socket.id);
+			console.log("Connected:", socket.id);
 		});
 
 		const onRoom = (data) => {
-				console.log(data);
-				Object.assign(room, data);
+			console.log(data);
+			Object.assign(room, data);
+			let member = data.members.find((item) => item.sid === user.sid);
+			if (user && member) {
+				user.points = member.points; 
+			}
 		};
 
 		socket.on("room", onRoom);
@@ -34,23 +40,49 @@
 		const onUser = (data) => {
 			console.log(data);
 			Object.assign(user, data);
-			Object.assign(room.members.find((item) => item.sid === data.sid) || {}, data);
 		};
 
 		socket.on("user", onUser);
 
+		const onScore = (data) => {
+			if (user.sid === data.sid) user.points = data.points;
+			Object.assign(room.members.find((item) => item.sid === data.sid) || {}, data);
+		};
+
+		socket.on("score", onScore); 
+
 		const onTask = (data) => {
 			console.log(data);
 			match = data;
+			gameOver = null;
 		};
 
 		socket.on("task", onTask);
+
+		const onGameOver = (data) => {
+			console.log('Game Over', data); 
+			gameOver = data;
+			readyMembers = data.members;
+		};
+
+		socket.on('game_over', onGameOver); 
+
+		const onReadyState = (data) => {
+			console.log('Ready:', data);
+
+			readyMembers = data.members;
+		};
+
+		socket.on("ready_state", onReadyState);
 
 		return () => {
 			socketState.leaveRoom();
 			socket.off("room", onRoom);
 			socket.off("user", onUser);
+			socket.off("score", onScore);
 			socket.off("task", onTask);
+			socket.off("game_over", onGameOver);
+			socket.off("ready_state", onReadyState);
 			socketState.disconnect();
 		};
 	});
@@ -58,8 +90,9 @@
 	$effect(() => {
 		if (!socketState.socket) return;
 
-		console.log("Socket verfügbar");
+		console.log("Socket available");
 	});
+
 </script>
 
 <div>
@@ -99,7 +132,43 @@
 						<Roster members={room.members} />
 					</div>
 					<div class="main-content">
-						{#if match}
+						{#if gameOver}
+							<div class="game-over">
+								<h1>Congratulations!</h1>
+								<p>All {gameOver.rounds} rounds have been played.</p>
+
+								<h2>Score</h2>
+								<div class="results">
+									{#each gameOver.members.toSorted((a, b) => b.points - a.points) as member}
+										<div class="result-row">
+											<span>{member.username}</span>
+											<span>{member.points}</span>
+										</div>
+									{/each}
+								</div>
+
+								<h2>New round</h2>
+								<div style="margin-bottom: 1rem;">
+									{#each readyMembers as member}
+										<div>
+											{member.username}:
+											{#if member.ready}
+												<span>✓ ready</span>
+											{:else}
+												<span>is waiting…</span>
+											{/if}
+										</div>
+									{/each}
+								</div>
+
+								{#if readyMembers.find((m) => m.sid === user.sid)?.ready}
+									<p>You are ready. Waiting for the other player…</p>
+								{:else}
+									<button type="button" onclick={() => socketState.ready()}>Ready</button>
+								{/if}
+
+							</div>
+						{:else if match}
 							<Countdown>
 								{#snippet display()}
 									<GameRoom match={match} />
@@ -154,6 +223,28 @@
 
 .spacer {
 	flex-grow: 1;
+}
+
+.game-over {
+	text-align: center;
+	width: min(500px, 90%);
+}
+
+.results {
+	margin: 1rem 0;
+	border: 1px solid black;
+	border-radius: 3px;
+}
+
+.result-row {
+	display: flex;
+	justify-content: space-between;
+	padding: 0.64rem;
+	border-bottom: 1px solid #ddd;
+}
+
+.result-row:last-child {
+	border-bottom: none;
 }
 
 </style>

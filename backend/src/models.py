@@ -123,14 +123,41 @@ class Room:
 
 
 MAX_TASK_ATTEMPTS = 3
+MAX_ROUNDS = 10
 
 class Match(Room):
 	def __init__(self, code: str, task_type: TaskType=TaskType.RANDOM) -> None:
 		super().__init__(code)
 		self._attempts = 0
+		self._round = 0
 		self._task: Task | None = None 
 		self._task_type = task_type
+		self._ready: set[str] = set()
 
+	@property
+	def ready_members(self) -> set[str]:
+		return self._ready
+
+	@property 
+	def round(self) -> int:
+		return self._round
+
+	@property 
+	def is_finished(self) -> bool:
+		return self.round >= MAX_ROUNDS
+
+	@property
+	def all_ready(self) -> bool:
+		return (
+			len(self._members) == MAX_ROOM_MEMBERS and 
+			all(
+				member.sid in self._ready
+				for member in self._members.values()
+			)
+		)
+
+			# len(self._ready) == len(self._members)
+	
 	@property
 	def attempts(self) -> int:
 		return self._attempts
@@ -143,22 +170,44 @@ class Match(Room):
 		self._task = choose_task(self._task_type)
 		return self._task
 
-	def process(self, value: str) -> tuple[Task, int, bool]:
+	def process(self, value: str) -> tuple[Task, int, bool, bool]:
 		if self._task is None:
 			self.create_task()
 
 		success = self._task.check(value)
 		if success:
-			self._task = self.create_task()
+			self._round += 1 
 			self._attempts = 0
+
+			finished = self.is_finished
+
+			if not finished:
+				self._task = self.create_task()
 		else:
+			finished = False
 			self._attempts += 1 
 			if self.attempts >= MAX_TASK_ATTEMPTS:
 				self._task = self.create_task()
 				self._attempts = 0 
 
-		return self._task, self.attempts, success
+		return self._task, self.attempts, success, finished
+
+	def remove_member(self, user: User) -> None:
+		super().remove_member(user)
+		self._ready.discard(user.sid)
+	
+	def reset(self) -> None:
+		self._round = 0
+		self._attempts = 0
+		self._task = None
+		self._ready.clear()
+
+		self.reset_points()
 
 	def reset_points(self) -> None:
 		for m in self._members.values():
 			m.points = 0
+
+	def set_ready(self, user: User) -> None:
+		if self.is_member(user):
+			self._ready.add(user.sid)

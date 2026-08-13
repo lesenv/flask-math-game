@@ -2,35 +2,39 @@
 import { io } from "socket.io-client";
 
 class SocketState {
-    socket = $state(null);
+	socket = $state(null);
 
-    connect() {
-        if (this.socket) return this.socket;
+	connect() {
+		if (this.socket) return this.socket;
 
-        this.socket = io();
-        return this.socket;
-    }
+		this.socket = io();
+		return this.socket;
+	}
 
-    disconnect() {
-        this.socket?.disconnect();
-        this.socket = null;
-    }
+	disconnect() {
+		this.socket?.disconnect();
+		this.socket = null;
+	}
 
-    joinRoom(username, roomname, tasktype) {
-        this.socket?.emit("join", { username, roomname, tasktype });
-    }
+	joinRoom(username, roomname, tasktype) {
+		this.socket?.emit("join", { username, roomname, tasktype });
+	}
 
-    leaveRoom() {
-        this.socket?.emit("leave", {});
-    }
+	leaveRoom() {
+		this.socket?.emit("leave", {});
+	}
 
-    submitResult(result) {
-        this.socket?.emit("solve", { c: result });
-    }
+	submitResult(result) {
+		this.socket?.emit("solve", { c: result });
+	}
 
-    submitMessage(message) {
-        this.socket?.emit("send_message", { message });
-    }
+	submitMessage(message) {
+		this.socket?.emit("send_message", { message });
+	}
+
+	ready() {
+		this.socket?.emit("ready");
+	}
 }
 
 export const socketState = new SocketState();
