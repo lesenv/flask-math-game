@@ -60,6 +60,10 @@ class Room:
     @property
     def sidebar_tasks(self):
         return all_tasks
+
+    @property
+    def sidebar_tasks_chosen(self):
+        return [t in all_tasks if t[2] else 0]
     
     @property
     def code(self):
