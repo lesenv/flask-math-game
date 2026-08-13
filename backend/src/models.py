@@ -1,6 +1,5 @@
 import secrets, string
-from tasks import choose_task
-
+from tasks import choose_task, all_tasks
 
 class User:
     def __init__(self, sid, username, points=0):
@@ -48,15 +47,20 @@ class User:
 
 
 MAX_ROOM_MEMBERS = 1
+MAX_TASK_ATTEMPTS = 3
 
 class Room:
     def __init__(self, code):
         self._code = code
-        self._members = {} 
+        self._members = {}
 
     def __len__(self):
         return len(self._members)
 
+    @property
+    def sidebar_tasks(self):
+        return all_tasks
+    
     @property
     def code(self):
         return self._code
@@ -115,7 +119,7 @@ class Match(Room):
     def __init__(self, code):
         super().__init__(code)
         self._attempts = 0
-        self._task = None 
+        self._task = None
 
     @property
     def attemmpts(self):
@@ -126,7 +130,7 @@ class Match(Room):
         self._attempts = value
 
     def create_task(self):
-        self._task = choose_task()
+        self._task = choose_task(all_tasks[1])
         return self._task
 
     def process(self, num):

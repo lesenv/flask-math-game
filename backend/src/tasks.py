@@ -1,5 +1,6 @@
-from typing import Protocol
-from abc import abstractmethod
+#from typing import Protocol
+#from abc import abstractmethod
+import sys, inspect
 import random
 
 MAX_TASK_ATTEMPTS = 3
@@ -8,7 +9,11 @@ def get_2_ints(_from: int = 1, _to: int = 10) -> list[int]:
     if _from > _to: _from, _to = _to, _from
     return [random.randint(_from, _to), random.randint(_from, _to)]
 
-class Multiply():
+class Task():
+    ''' parent class for all the different Tasks available
+    '''
+
+class Multiply(Task):
     def __init__(self, a, b):
         self.a = a
         self.b = b
@@ -28,7 +33,7 @@ class Multiply():
             'str': self.string()
         }
 
-class Division():
+class Division(Task):
     def __init__(self, a, b):
         self.x = a * b
         self.y = b
@@ -48,15 +53,22 @@ class Division():
             'str': self.string()
         }
 
-def choose_task():
-    if Multiply:
-        return Division(
+def choose_task(task):
+    tasks = {"Multiply": Multiply(
                     random.randint(1, 10), 
-                    random.randint(1, 10))
-    return _Task
+                    random.randint(1, 10)
+                    ),
+             "Division": Division(
+                 random.randint(1,10),
+                 random.randint(1,10)
+                 )
+    }
+    return tasks[task]
 
-all_tasks = [Multiply, Division]
+def just_choose_subclasses_of_Task(cls):
+    if not type(cls) == type(Task):
+        return False
+    else:
+        return issubclass(cls, Task) and cls is not Task
 
-for task in all_tasks:
-    task.sidebar_tasks = all_tasks
-        
+all_tasks = inspect.getmembers(sys.modules[__name__], just_choose_subclasses_of_Task)

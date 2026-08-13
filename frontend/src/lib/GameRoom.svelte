@@ -28,3 +28,9 @@
   <li>oihasdom</li>
 </ul>
 </div>
+<style>
+  div {
+    background-color: #bbbbbb;
+    padding: 2em
+  }
+</style>

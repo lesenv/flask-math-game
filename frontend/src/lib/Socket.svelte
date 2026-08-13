@@ -12,7 +12,7 @@
   import { onMount } from 'svelte';
 
   let match = $state();
-  let sidebar_tasks = $state({});
+  let sidebar_tasks = $state(["Division"]);
 
   function leave() {
     socketState.leaveRoom();
@@ -44,13 +44,15 @@
     const onTask = (data) => {
       console.log("data_Task", data);
       match = data;
+      sidebar_tasks = match.sidebar_tasks
+      //console.log("XXXXXXX", sidebar_tasks)
     };
 
     socket.on("task", onTask);
 
     const onSidebar_tasks = (data) => {
       console.log("data_sidebar: ", data)
-      sidebar_tasks = match.tasks
+      sidebar_tasks = match.sidebar_tasks
       console.log("sidebar: ", sidebar_tasks)
     }
 
@@ -112,7 +114,7 @@
               <Countdown>
                 {#snippet display()}
                   <GameRoom match={match} />
-                  <ChooseTasks sidebar_tasks={room.sidebar_tasks} />
+                  <ChooseTasks sidebar_tasks={ room.sidebar_tasks } />
                 {/snippet}
               </Countdown>
             {/if}

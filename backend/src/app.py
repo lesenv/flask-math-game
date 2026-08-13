@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, session
 from flask_session import Session
 from flask_socketio import SocketIO, emit, join_room, leave_room
 from models import Match as _Match, Room, User
-
+import logging
 
 app = Flask(__name__, 
     static_url_path='', 
@@ -56,7 +56,8 @@ def on_disconnect():
 							'username': m.username, 
 							'points': m.points
 						} for m in room._members.values()
-					] 
+					],
+					'sidebar_tasks': room.sidebar_tasks
 				}, 
 				room=room.code
 			)
@@ -215,4 +216,8 @@ def on_solve(data):
 
 
 if __name__ == "__main__":
+	logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s %(levelname)s %(message)s',
+                    handlers=[logging.StreamHandler()])
+	logging.debug('This message should go to the log file and to the console')
 	socketio.run(app, debug=True)
