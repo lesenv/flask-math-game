@@ -71,4 +71,4 @@ def just_choose_subclasses_of_Task(cls):
     else:
         return issubclass(cls, Task) and cls is not Task
 
-all_tasks = inspect.getmembers(sys.modules[__name__], just_choose_subclasses_of_Task)
+all_tasks = [i[0] for i in inspect.getmembers(sys.modules[__name__], just_choose_subclasses_of_Task)]

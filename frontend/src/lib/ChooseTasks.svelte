@@ -8,7 +8,7 @@
     }
 </style>
 <script>
-    let { sidebar_tasks = [] } = $props()
+    let { sidebar_tasks } = $props()
 </script>
 <div id="ChoseTasksDiv">
   <ul id="ChoseTasks">

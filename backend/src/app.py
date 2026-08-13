@@ -112,7 +112,8 @@ def on_join(data):
 						'username': m.username, 
 						'points': m.points
 					} for m in room._members.values()
-				] 
+				],
+				'sidebar_tasks': room.sidebar_tasks
 			}, 
 			room=room.code
 		)
