@@ -104,7 +104,7 @@ def on_join(data):
 
 	if room.is_closed:
 		# Start the match here!
-		room.reset_points()
+		room.reset()
 
 		emit('room', 
 			{ 

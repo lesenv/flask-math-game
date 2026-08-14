@@ -150,13 +150,8 @@ class Match(Room):
 	def all_ready(self) -> bool:
 		return (
 			len(self._members) == MAX_ROOM_MEMBERS and 
-			all(
-				member.sid in self._ready
-				for member in self._members.values()
-			)
+			len(self._ready) == len(self._members)
 		)
-
-			# len(self._ready) == len(self._members)
 	
 	@property
 	def attempts(self) -> int:
@@ -202,9 +197,6 @@ class Match(Room):
 		self._task = None
 		self._ready.clear()
 
-		self.reset_points()
-
-	def reset_points(self) -> None:
 		for m in self._members.values():
 			m.points = 0
 
