@@ -74,4 +74,4 @@ def just_choose_subclasses_of_Task(cls):
 # all_tasks_everything 
 # "name", cls, chosen(bool)
 all_tasks_everything = [[i[0], i[1], False] for i in inspect.getmembers(sys.modules[__name__], just_choose_subclasses_of_Task)]
-all_tasks = [i[0] for i in all_tasks_everything]
+all_tasks = [[i[0], True] for i in all_tasks_everything]

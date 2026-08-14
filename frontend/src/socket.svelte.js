@@ -2,7 +2,7 @@
 import { io } from "socket.io-client";
 
 class SocketState {
-    socket = $state(null);
+    socket = $state(io.prototype);
 
     connect() {
         if (this.socket) return this.socket;
@@ -33,7 +33,11 @@ class SocketState {
     }
 
     sidebar_tasks() {
-        this.socket?.emit("get_sidebar_tasks", { get_sidebar });
+        this.socket?.emit("get_sidebar_tasks", {});
+    }
+
+    checks() {
+        this.socket?.emit("get_checks", {});
     }
 }
 
