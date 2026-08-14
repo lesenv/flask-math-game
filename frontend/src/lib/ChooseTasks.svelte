@@ -16,17 +16,11 @@
 <script>
     import { socketState } from "../socket.svelte";
 
-    let checks__ = $state(socketState.get_checks())
-
     let { sidebar_tasks = [], sidebar_task_chosen = [] } = $props();
 
-    function actualize_checks(what) {
-      socketState.onSetSidebar = what;
+    function actualize_checks() {
+      socketState.onSetSidebar(sidebar_task_chosen);
     }
-
-
-
-    $inspect(checks__).with(actualize_checks);
 
 </script>
 <div id="ChoseTasksDiv">
@@ -34,10 +28,10 @@
     <ul id="ChoseTasks">
       <li>""--{ sidebar_tasks }--""</li>
       {#each sidebar_tasks as task, i}
-      <li><label><input type="checkbox" value="{task}" bind:group={checks__} checked={sidebar_task_chosen[i]}/>{task}</label></li>
+      <li><label><input type="checkbox" value="{task}" bind:group={sidebar_task_chosen} checked={sidebar_task_chosen[i]}/>{task}</label></li>
       {/each}
     </ul>
-    <h3>{checks__}</h3>
+    <h3>{sidebar_task_chosen}</h3>
     	<button formaction="?/">Aktualisieren</button>
   </form>
 </div>

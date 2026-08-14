@@ -64,7 +64,6 @@
       socket.off("user", onUser);
       socket.off("task", onTask);
       socket.off("get_sidebar_tasks", onSidebar_tasks);
-      socket.off("set_sidebar_tasks", onSetSidebar)
       socketState.disconnect();
     };
   });

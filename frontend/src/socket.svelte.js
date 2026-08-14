@@ -35,10 +35,6 @@ class SocketState {
     sidebar_tasks() {
         this.socket?.emit("get_sidebar_tasks", {});
     }
-
-    checks() {
-        this.socket?.emit("get_checks", {});
-    }
 }
 
 export const socketState = new SocketState();
