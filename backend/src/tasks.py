@@ -14,16 +14,22 @@ class Task():
     '''
 
 class Multiply(Task):
-    def __init__(self, a, b):
+    def __init__(self, a = None, b = None):
+        if not a:
+            a = random.randint(1,10)
+        if not b:
+            b = random.randint(1,10)
         self.a = a
         self.b = b
         self.c = a * b
 
-    def default(self):
-        return self(
-            random.randint(1, 10), 
-            random.randint(1, 10)
-            )
+    def __repr__(self):
+        return "Multiplikation"
+
+    def new_task(self):
+        a = random.randint(1,10)
+        b = random.randint(1,10)
+        return a, b
 
     def string(self):
         return f"{self.a} * {self.b}"
@@ -40,16 +46,20 @@ class Multiply(Task):
         }
 
 class Division(Task):
-    def __init__(self, a, b):
+    def __init__(self, a = None, b = None):
+        if not a:
+            a = random.randint(1,10)
+        if not b:
+            b = random.randint(1,10)
         self.x = a * b
         self.y = b
         self.z = a
 
-    def default(self):
-        return self(
-            random.randint(1, 10), 
-            random.randint(1, 10)
-            )
+    def __str__(self):
+        return "Division"
+
+    def new_task(self):
+        return random.randint(1, 10), random.randint(1, 10)
 
     def string(self):
         return f"{self.x} / {self.y}"
@@ -65,12 +75,25 @@ class Division(Task):
             'str': self.string()
         }
 
+## WHY is this not working anymore?
+## not even with 
+##    tasks[cls.__name__] = cls(*cls.new_task(cls))
 tasks = {}
 for cls in Task.__subclasses__():
-    tasks[cls.__name__] = cls.default(cls)
+    tasks[cls.__name__] = cls()
 
 def choose_task(task):
-    return tasks[task]
+    tasks_here = {
+        "Multiplikation": Multiply(
+            random.randint(1, 10), 
+            random.randint(1, 10)
+        ),
+        "Division": Division(
+            random.randint(1,10),
+            random.randint(1,10)
+        )
+    }
+    return tasks_here[task]
 
 all_tasks = tuple((cls.__name__, True) for cls in Task.__subclasses__())
 
