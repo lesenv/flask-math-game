@@ -53,29 +53,24 @@
 
     socket.on("task", onTask);
 
-    const onSidebar_tasks = (data) => {
-      console.log("data_sidebar: ", data)
-      sidebar_tasks = match.sidebar_tasks
-      console.log("sidebar: ", sidebar_tasks)
-    }
-
-    socket.on("get_sidebar_tasks", onSidebar_tasks);
 
     return () => {
       socketState.leaveRoom();
       socket.off("room", onRoom);
       socket.off("user", onUser);
       socket.off("task", onTask);
-      socket.off("get_sidebar_tasks", onSidebar_tasks);
+      // socket.off("get_sidebar_tasks", onSidebar_tasks);
       socketState.disconnect();
     };
   });
 
-  $effect(() => {
-    if (!socketState.socket) return;
+// $effect(() => {
+//   if (!socketState.socket) return;
 
-    console.log("Socket verfügbar");
-  });
+//   console.log("Socket verfügbar");
+// });
+
+  $inspect(enabled_tasks);
 </script>
 
 <div>
@@ -117,10 +112,13 @@
               <Countdown>
                 {#snippet display()}
                   <GameRoom match={match} />
-                  <ChooseTasks sidebar_tasks={ [room.sidebar_tasks, room.sidebar_tasks_chosen] } />
+                  <!-- <ChooseTasks sidebar_tasks={ [room.sidebar_tasks, room.sidebar_tasks_chosen] } /> -->
                 {/snippet}
               </Countdown>
             {/if}
+          </div>
+          <div class="sidebar sidebar-right">
+            <TaskChooser bind:enabled_tasks={ enabled_tasks } />
           </div>
         </div>
       </div>
@@ -165,6 +163,11 @@
   overflow-y: auto;
   padding: 0;
   border-right: 1px solid black;
+}
+
+.sidebar-right {
+  border-right: none;
+  border-left: 1px solid black;
 }
 
 .spacer {

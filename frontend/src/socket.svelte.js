@@ -2,7 +2,7 @@
 import { io } from "socket.io-client";
 
 class SocketState {
-    socket = $state(io.prototype);
+    socket = $state(null);
 
     connect() {
         if (this.socket) return this.socket;
