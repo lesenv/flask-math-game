@@ -13,7 +13,7 @@ class Task():
     ''' parent class for all the different Tasks available
     '''
 
-class Multiply(Task):
+class kleines_1x1(Task):
     def __init__(self, a = None, b = None):
         if not a:
             a = random.randint(1,10)
@@ -22,9 +22,6 @@ class Multiply(Task):
         self.a = a
         self.b = b
         self.c = a * b
-
-    def __repr__(self):
-        return "Multiplikation"
 
     def new_task(self):
         a = random.randint(1,10)
@@ -55,9 +52,6 @@ class Division(Task):
         self.y = b
         self.z = a
 
-    def __str__(self):
-        return "Division"
-
     def new_task(self):
         return random.randint(1, 10), random.randint(1, 10)
 
@@ -84,7 +78,7 @@ for cls in Task.__subclasses__():
 
 def choose_task(task):
     tasks_here = {
-        "Multiplikation": Multiply(
+        "kleines_1x1": kleines_1x1(
             random.randint(1, 10), 
             random.randint(1, 10)
         ),
