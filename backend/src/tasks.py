@@ -54,24 +54,18 @@ class Division(Task):
         }
 
 def choose_task(task):
-    tasks = {"Multiply": Multiply(
-                    random.randint(1, 10), 
-                    random.randint(1, 10)
-                    ),
-             "Division": Division(
-                 random.randint(1,10),
-                 random.randint(1,10)
-                 )
+    tasks = {
+        "Multiply": Multiply(
+            random.randint(1, 10), 
+            random.randint(1, 10)
+        ),
+        "Division": Division(
+            random.randint(1,10),
+            random.randint(1,10)
+        )
     }
     return tasks[task]
 
-def just_choose_subclasses_of_Task(cls):
-    if not type(cls) == type(Task):
-        return False
-    else:
-        return issubclass(cls, Task) and cls is not Task
+all_tasks = tuple((cls.__name__, True) for cls in Task.__subclasses__())
 
-# all_tasks_everything 
-# "name", cls, chosen(bool)
-all_tasks_everything = [[i[0], i[1], False] for i in inspect.getmembers(sys.modules[__name__], just_choose_subclasses_of_Task)]
-all_tasks = [[i[0], True] for i in all_tasks_everything]
+print(all_tasks)

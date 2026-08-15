@@ -8,11 +8,13 @@
   import Points from './Points.svelte';
   import GameRoom from './GameRoom.svelte'
   import Countdown from './Countdown.svelte'
-  import ChooseTasks from './ChooseTasks.svelte';
+  // import ChooseTasks from './ChooseTasks.svelte';
+  import TaskChooser from './TaskChooser.svelte';
   import { onMount } from 'svelte';
 
   let match = $state();
   let sidebar_tasks = $state(["Division"]);
+  let enabled_tasks = $state({}); 
 
   function leave() {
     socketState.leaveRoom();
@@ -29,6 +31,7 @@
     const onRoom = (data) => {
         console.log(data);
         Object.assign(room, data);
+        Object.assign(enabled_tasks, data.enabled_tasks);
     };
 
     socket.on("room", onRoom);

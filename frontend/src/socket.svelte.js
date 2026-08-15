@@ -32,8 +32,8 @@ class SocketState {
         this.socket?.emit("send_message", { message });
     }
 
-    sidebar_tasks() {
-        this.socket?.emit("get_sidebar_tasks", {});
+    updateTasks(enabled_tasks) {
+        this.socket?.emit("tasks_state", { enabled_tasks }); 
     }
 }
 

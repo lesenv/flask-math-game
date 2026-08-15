@@ -18,8 +18,8 @@
 
     let { sidebar_tasks = [], sidebar_task_chosen = [] } = $props();
 
-    function actualize_checks() {
-      socketState.onSetSidebar(sidebar_task_chosen);
+    function toggle_Checkbox(toggledTask) {
+      socketState.toggleCheckbox(toggledTask);
     }
 
 </script>
@@ -28,7 +28,7 @@
     <ul id="ChoseTasks">
       <li>""--{ sidebar_tasks }--""</li>
       {#each sidebar_tasks as task, i}
-      <li><label><input type="checkbox" value="{task}" bind:group={sidebar_task_chosen} checked={sidebar_task_chosen[i]}/>{task}</label></li>
+      <li><label><input ontoggle={toggle_Checkbox(task)} type="checkbox" value="{task}" bind:group={sidebar_task_chosen} checked={sidebar_task_chosen[i]}/>{task}</label></li>
       {/each}
     </ul>
     <h3>{sidebar_task_chosen}</h3>

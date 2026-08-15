@@ -56,18 +56,6 @@ class Room:
 
     def __len__(self):
         return len(self._members)
-
-    @property
-    def sidebar_tasks(self):
-        # just the names as
-        # all_tasks = ["name", checked: boolean]
-        return [task[0] for task in all_tasks]
-
-    @property
-    def sidebar_tasks_chosen(self):
-        # just the names if task is checked
-        # all_tasks = ["name", checked: boolean]
-        return [task[0] for task in all_tasks if task[1]]
     
     @property
     def code(self):
@@ -128,6 +116,24 @@ class Match(Room):
         super().__init__(code)
         self._attempts = 0
         self._task = None
+        self._enabled_tasks = dict(all_tasks)
+
+    @property
+    def enabled_tasks(self):
+        return self._enabled_tasks
+    
+    def apply_tasks(self, task_bools):
+        for t,v in task_bools.items():
+            if t not in self._enabled_tasks:
+                ValueError('Unknown task: {t}')
+            self._enabled_tasks[t] = v
+
+        if all(not v for _,v in task_bools.items()):
+            self._enabled_tasks[v] = True # 'Division'??
+    
+    @property
+    def is_current_task_enabled(self):
+        return self._enabled_tasks[type(self._task).__name__]
 
     @property
     def attemmpts(self):
@@ -138,7 +144,12 @@ class Match(Room):
         self._attempts = value
 
     def create_task(self):
-        self._task = choose_task(all_tasks[1])
+        import random
+        from tasks import Division
+
+        available_tasks = [t for t,s in self.enabled_tasks.items() if s]
+        task = random.choice(available_tasks or [Division])
+        self._task = choose_task(task)
         return self._task
 
     def process(self, num):
