@@ -19,6 +19,12 @@ class Multiply(Task):
         self.b = b
         self.c = a * b
 
+    def default(self):
+        return self(
+            random.randint(1, 10), 
+            random.randint(1, 10)
+            )
+
     def string(self):
         return f"{self.a} * {self.b}"
 
@@ -39,6 +45,12 @@ class Division(Task):
         self.y = b
         self.z = a
 
+    def default(self):
+        return self(
+            random.randint(1, 10), 
+            random.randint(1, 10)
+            )
+
     def string(self):
         return f"{self.x} / {self.y}"
 
@@ -53,17 +65,11 @@ class Division(Task):
             'str': self.string()
         }
 
+tasks = {}
+for cls in Task.__subclasses__():
+    tasks[cls.__name__] = cls.default(cls)
+
 def choose_task(task):
-    tasks = {
-        "Multiply": Multiply(
-            random.randint(1, 10), 
-            random.randint(1, 10)
-        ),
-        "Division": Division(
-            random.randint(1,10),
-            random.randint(1,10)
-        )
-    }
     return tasks[task]
 
 all_tasks = tuple((cls.__name__, True) for cls in Task.__subclasses__())

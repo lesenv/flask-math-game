@@ -142,7 +142,7 @@ def on_join(data):
 						'points': m.points
 					} for m in room._members.values()
 				],
-				enabled_tasks': room.enabled_tasks
+				'enabled_tasks': room.enabled_tasks
 			}, 
 			room=room.code
 		)
