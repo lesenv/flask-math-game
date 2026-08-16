@@ -126,6 +126,10 @@ class Match(Room):
     def apply_tasks(self, task_bools):
         for t,v in task_bools.items():
             self._enabled_tasks[t] = v
+
+        # if no task is chosen, take a default one
+        if all(not v for _, v in task_bools.items()):
+            self._enabled_tasks["Division"] = True
     
     @property
     def is_current_task_enabled(self):
