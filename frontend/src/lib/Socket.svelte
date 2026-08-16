@@ -8,12 +8,10 @@
   import Points from './Points.svelte';
   import GameRoom from './GameRoom.svelte'
   import Countdown from './Countdown.svelte'
-  // import ChooseTasks from './ChooseTasks.svelte';
   import TaskChooser from './TaskChooser.svelte';
   import { onMount } from 'svelte';
 
   let match = $state();
-  let sidebar_tasks = $state(["Division"]);
   let enabled_tasks = $state({}); 
 
   function leave() {
@@ -47,8 +45,6 @@
     const onTask = (data) => {
       console.log("data_Task", data);
       match = data;
-      sidebar_tasks = match.sidebar_tasks
-      //console.log("XXXXXXX", sidebar_tasks)
     };
 
     socket.on("task", onTask);
@@ -59,16 +55,9 @@
       socket.off("room", onRoom);
       socket.off("user", onUser);
       socket.off("task", onTask);
-      // socket.off("get_sidebar_tasks", onSidebar_tasks);
       socketState.disconnect();
     };
   });
-
-// $effect(() => {
-//   if (!socketState.socket) return;
-
-//   console.log("Socket verfügbar");
-// });
 
   $inspect(enabled_tasks);
 </script>
@@ -112,7 +101,6 @@
               <Countdown>
                 {#snippet display()}
                   <GameRoom match={match} />
-                  <!-- <ChooseTasks sidebar_tasks={ [room.sidebar_tasks, room.sidebar_tasks_chosen] } /> -->
                 {/snippet}
               </Countdown>
             {/if}
