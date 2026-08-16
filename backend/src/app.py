@@ -5,7 +5,7 @@ from models import Match as _Match, Room, User
 import logging
 
 app = Flask(__name__, 
-	static_url_path='', 
+    static_url_path='', 
 )
 
 app.config.from_mapping(
@@ -25,10 +25,10 @@ socketio = SocketIO(app,
 def index():
 	return app.send_static_file('index.html')
 
-# @app.route('/dev')
-# def dev_index():
-# 	session.clear() # deprecated 
-# 	return render_template('index.html') 
+@app.route('/dev')
+def dev_index():
+	session.clear() # deprecated 
+	return render_template('index.html') 
 
 
 @socketio.on('connect')
@@ -75,7 +75,6 @@ def on_join(data):
 
 	username = data['username'].strip()
 	roomcode = data.get('roomname', None)
-	task_type = TaskType.from_string(data.get('tasktype', ''))
 
 	if not username:
 		return
@@ -87,14 +86,11 @@ def on_join(data):
 	room = None
 	if roomcode:
 		room = _Match.find_by_code(roomcode)
-	if not room:
-		if task_type:
-			room = _Match.find_open_room_by_type(task_type)
-		else:
-			room = _Match.find_open_room()
+	if not room:		
+		room = _Match.find_open_room()
 
 	if not room or room.is_closed:
-		room = _Match.create(task_type or TaskType.RANDOM)
+		room = _Match.create()
 	room.add_member(user)
 
 	join_room(room.code)
@@ -104,13 +100,12 @@ def on_join(data):
 
 	if room.is_closed:
 		# Start the match here!
-		room.reset()
+		room.reset_points()
 
 		emit('room', 
 			{ 
 				'state': 'closed', 
 				'code': room.code, 
-				'type': room.task_type, 
 				'members': [
 					{ 
 						'sid': m.sid, 
@@ -128,21 +123,18 @@ def on_join(data):
 		emit('task', 
 			{
 				'attempts': attempts, 
-				'round': room.round, 
-				'max_rounds': MAX_ROUNDS, 
-				'task': task.to_dict(), 
+				'task': task._asdict(), 
 				'success': success
 			}, 
 			room=room.code
 		)
-		emit('user', { 'username': user.username, 'sid': user.sid, 'points': user.points }, room=user.sid)
+		emit('user', { 'username': user.username, 'sid': user.sid, 'points': user.points }, room=room.code)
 
 	else:
 		emit('room', 
 			{ 
 				'state': 'open', 
 				'code': room.code, 
-				'type': room.task_type, 
 				'members': [
 					{ 
 						'sid': m.sid, 
@@ -154,7 +146,7 @@ def on_join(data):
 			}, 
 			room=room.code
 		)
-		emit('user', { 'username': user.username, 'sid': user.sid, 'points': user.points }, room=user.sid)
+		emit('user', { 'username': user.username, 'sid': user.sid, 'points': user.points }, room=room.code)
 
 @socketio.on('leave')
 def on_leave(data):
@@ -170,7 +162,6 @@ def on_leave(data):
 			{ 
 				'state': 'open', 
 				'code': room.code, 
-				'type': room.task_type, 
 				'members': [
 					{ 
 						'sid': m.sid, 
@@ -212,42 +203,20 @@ def on_solve(data):
 		return 
 
 	# Process the attempted solution here!
-	value = data['c']
-	task, attempts, success, finished = room.process(value)
-
-	if success:
-		user.points += 10 
-		emit('score', { 'username': user.username, 'sid': user.sid, 'points': user.points }, room=room.code) 
-
-	if finished:
-		emit('game_over', 
-			{
-				'rounds': room.round, 
-				'members': [
-					{
-						'sid': m.sid, 
-						'username': m.username, 
-						'points': m.points, 
-						'ready': m.sid in room.ready_members
-					}
-					for m in room._members.values()
-				]
-			}, 
-			room=room.code
-		)
-
-		return 
-
+	num = int(data['c'])
+	task, attempts, success = room.process(num)
 	emit('task', 
 		{
 			'attempts': attempts, 
-			'round': room.round, 
-			'max_rounds': MAX_ROUNDS, 
-			'task': task.to_dict(), 
+			'task': task._asdict(), 
 			'success': success
 		}, 
 		room=room.code
 	)
+	if success:
+		user.points += 10
+		emit('user', { 'username': user.username, 'sid': user.sid, 'points': user.points }, room=room.code) #user.sid)
+		# <- room ?
 
 @socketio.on('tasks_state')
 def on_tasks_state(data):
