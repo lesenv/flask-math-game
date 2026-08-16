@@ -116,10 +116,11 @@ class minus_bis_20(plus_bis_10, Task):
         return num == self.a
 
 # all the Tasks above should be easy to retrieve by other routines
-    
 tasks_class = {cls.__name__: cls() for cls in Task.__subclasses__()}
-all_tasks = tuple((cls.__name__, True) for cls in Task.__subclasses__())
 
 def choose_task(task):
     tasks_class[task].new_task()
     return tasks_class[task]
+
+# for being imported by other modules
+all_tasks = tuple((cls_name, True) for cls_name in tasks_class)
