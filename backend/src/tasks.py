@@ -99,7 +99,11 @@ class plus_bis_10(Task):
 
 class plus_bis_100(plus_bis_10, Task):
     def __init__(self, c=None, b=None):
-        super().__init__(c = random.randint(1,100))
+        super().__init__(c = random.randint(1,100), b=b)
+
+class plus_bis_100_einfacher(plus_bis_100, Task):
+    def __init__(self, c=None, b=None):
+        super().__init__(b = random.randint(1,10))
 
 class minus_bis_20(plus_bis_10, Task):
     def __init__(self, c=None, b=None):
@@ -110,6 +114,8 @@ class minus_bis_20(plus_bis_10, Task):
     
     def check(self, num):
         return num == self.a
+
+# all the Tasks above should be easy to retrieve by other routines
     
 tasks_class = {cls.__name__: cls() for cls in Task.__subclasses__()}
 all_tasks = tuple((cls.__name__, True) for cls in Task.__subclasses__())
