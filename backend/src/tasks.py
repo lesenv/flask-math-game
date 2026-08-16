@@ -24,8 +24,8 @@ class kleines_1x1(Task):
         self.c = a * b
 
     def new_task(self):
-        a = random.randint(1,10)
-        b = random.randint(1,10)
+        a, b = random.randint(1, 10), random.randint(1, 10)
+        self.__init__(a, b)
         return a, b
 
     def string(self):
@@ -48,12 +48,17 @@ class Division(Task):
             a = random.randint(1,10)
         if not b:
             b = random.randint(1,10)
+        self._assign_self_variables(a, b)
+
+    def _assign_self_variables(self, a, b):
         self.x = a * b
         self.y = b
         self.z = a
 
     def new_task(self):
-        return random.randint(1, 10), random.randint(1, 10)
+        a, b = random.randint(1, 10), random.randint(1, 10)
+        self._assign_self_variables(a, b)
+        return a, b
 
     def string(self):
         return f"{self.x} / {self.y}"
@@ -69,7 +74,7 @@ class Division(Task):
             'str': self.string()
         }
 
-class PlusMinusBis10(Task):
+class plus_bis_10(Task):
     def __init__(self, c = None, b = None):
         if not c:
             c = random.randint(1,10)
@@ -82,6 +87,7 @@ class PlusMinusBis10(Task):
     def new_task(self):
         c = random.randint(1,10)
         b = random.randint(1,c)
+        self.__init__(c, b)
         return c, b
 
     def string(self):
@@ -98,28 +104,23 @@ class PlusMinusBis10(Task):
             'str': self.string()
         }
 
+class plus_bis_100(plus_bis_10, Task):
+    def __init__(self, c=None, b=None):
+        super().__init__(c = random.randint(1,100))
 
-## WHY is this not working anymore?
-## not even with 
-##    tasks[cls.__name__] = cls(*cls.new_task(cls))
-tasks = {}
-for cls in Task.__subclasses__():
-    tasks[cls.__name__] = cls()
+class minus_bis_20(plus_bis_10, Task):
+    def __init__(self, c=None, b=None):
+        super().__init__(c = random.randint(1,20))
 
-def choose_task(task):
-    tasks_here = {
-        "kleines_1x1": kleines_1x1(
-            random.randint(1, 10), 
-            random.randint(1, 10)
-        ),
-        "Division": Division(
-            random.randint(1,10),
-            random.randint(1,10)
-        ),
-        "PlusMinusBis10": PlusMinusBis10()
-    }
-    return tasks_here[task]
-
+    def string(self):
+        return f"{self.c} - {self.b}"
+    
+    def check(self, num):
+        return num == self.a
+    
+tasks_class = {cls.__name__: cls() for cls in Task.__subclasses__()}
 all_tasks = tuple((cls.__name__, True) for cls in Task.__subclasses__())
 
-print(all_tasks)
+def choose_task(task):
+    tasks_class[task].new_task()
+    return tasks_class[task]
