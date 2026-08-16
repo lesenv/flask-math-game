@@ -1,7 +1,5 @@
 import random
 
-MAX_TASK_ATTEMPTS = 3
-
 class Task():
     ''' parent class for all the different Tasks available
     '''
@@ -35,35 +33,21 @@ class kleines_1x1(Task):
             'str': self.string()
         }
 
-class Division(Task):
+class Division(kleines_1x1, Task):
     def __init__(self, a = None, b = None):
-        if not a:
-            a = random.randint(1,10)
-        if not b:
-            b = random.randint(1,10)
-        self._assign_self_variables(a, b)
-
-    def _assign_self_variables(self, a, b):
-        self.x = a * b
-        self.y = b
-        self.z = a
-
-    def new_task(self):
-        a, b = random.randint(1, 10), random.randint(1, 10)
-        self._assign_self_variables(a, b)
-        return a, b
+        super().__init__(a=a, b=b)
 
     def string(self):
-        return f"{self.x} / {self.y}"
+        return f"{self.c} / {self.b}"
 
     def check(self, num):
-        return num == self.z
+        return num == self.a
 
     def _asdict(self):
         return {
-            'a': self.x,
-            'b': self.y,
-            'c': self.z,
+            'a': self.c,
+            'b': self.b,
+            'c': self.a,
             'str': self.string()
         }
 
@@ -116,10 +100,11 @@ class minus_bis_20(plus_bis_10, Task):
         return num == self.a
 
 # all the Tasks above should be easy to retrieve by other routines
-    
 tasks_class = {cls.__name__: cls() for cls in Task.__subclasses__()}
-all_tasks = tuple((cls.__name__, True) for cls in Task.__subclasses__())
 
 def choose_task(task):
     tasks_class[task].new_task()
     return tasks_class[task]
+
+# for being imported by other modules
+all_tasks = tuple((cls_name, True) for cls_name in tasks_class)
