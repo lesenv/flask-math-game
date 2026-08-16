@@ -16,7 +16,7 @@
 	{#each Object.entries(enabled_tasks) as [task, enabled]}
 		<div>
 			<label>
-				<input type="checkbox" bind:checked={enabled_tasks[task]} ontoggle={enabled_tasks[task].toggle()}/>
+				<input type="checkbox" bind:checked={enabled_tasks[task]} ontoggle={enabled_tasks[task].toggle()} />
 				{ task }
 			</label>
 		</div>
