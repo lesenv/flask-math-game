@@ -1,6 +1,3 @@
-#from typing import Protocol
-#from abc import abstractmethod
-import sys, inspect
 import random
 
 MAX_TASK_ATTEMPTS = 3
