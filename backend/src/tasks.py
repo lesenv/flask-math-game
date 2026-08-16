@@ -107,4 +107,8 @@ def choose_task(task):
     return tasks_class[task]
 
 # for being imported by other modules
+<<<<<<< HEAD
 all_tasks = tuple((cls_name, True) for cls_name in tasks_class)
+=======
+all_tasks = tuple((cls_name, True) for cls_name in tasks_class)
+>>>>>>> refs/remotes/origin/developer
