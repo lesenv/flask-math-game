@@ -10,14 +10,13 @@
 		event.preventDefault();
 		socketState.updateTasks(enabled_tasks);
 	}
-
 </script>
 
 <form onsubmit={handleSubmit} name="task-form">
 	{#each Object.entries(enabled_tasks) as [task, enabled]}
 		<div>
 			<label>
-				<input type="checkbox" bind:checked={enabled_tasks[task]} />
+				<input type="checkbox" bind:checked={enabled_tasks[task]} ontoggle={enabled_tasks[task].toggle()}/>
 				{ task }
 			</label>
 		</div>
