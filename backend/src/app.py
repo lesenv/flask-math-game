@@ -57,7 +57,7 @@ def on_disconnect():
 							'points': m.points
 						} for m in room._members.values()
 					],
-					'sidebar_tasks': room.sidebar_tasks
+					'enabled_tasks': room.enabled_tasks
 				}, 
 				room=room.code
 			)
@@ -113,7 +113,8 @@ def on_join(data):
 						'points': m.points
 					} for m in room._members.values()
 				],
-				'sidebar_tasks': room.sidebar_tasks
+				'enabled_tasks': room.enabled_tasks
+
 			}, 
 			room=room.code
 		)
@@ -140,7 +141,8 @@ def on_join(data):
 						'username': m.username, 
 						'points': m.points
 					} for m in room._members.values()
-				] 
+				],
+				'enabled_tasks': room.enabled_tasks
 			}, 
 			room=room.code
 		)
@@ -166,7 +168,8 @@ def on_leave(data):
 						'username': m.username, 
 						'points': m.points
 					} for m in room._members.values()
-				] 
+				],
+				'enabled_tasks': room.enabled_tasks
 			}, 
 			room=room.code
 		)
@@ -214,6 +217,45 @@ def on_solve(data):
 		user.points += 10
 		emit('user', { 'username': user.username, 'sid': user.sid, 'points': user.points }, room=room.code) #user.sid)
 		# <- room ?
+
+@socketio.on('tasks_state')
+def on_tasks_state(data):
+	room = _Match.find_by_code(session.get('code', None))
+	if room is None:
+		return 
+
+	enabled_tasks = data.get('enabled_tasks', {})
+	room.apply_tasks(enabled_tasks)
+
+	emit('room', 
+		{ 
+			'state': 'open' if room.is_open else 'closed', 
+			'code': room.code, 
+			'members': [
+				{ 
+					'sid': m.sid, 
+					'username': m.username, 
+					'points': m.points
+				} for m in room._members.values()
+			], 
+			'enabled_tasks': room.enabled_tasks
+		}, 
+		room=room.code
+	)
+	if not room.is_current_task_enabled:
+		task, attempts, success = room.create_task(), 0, False
+		emit('task', 
+			{
+				'attempts': attempts, 
+				'task': task._asdict(), 
+				'success': success
+			}, 
+			room=room.code
+		)
+
+
+
+
 
 
 if __name__ == "__main__":

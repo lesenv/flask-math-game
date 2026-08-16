@@ -2,22 +2,36 @@
     #ChoseTasksDiv {
       background-color: #eeeeee;
       padding: 2em;
+      border-radius: 0em 2em 2em 0em;
     }
     #ChoseTasks {
       background-color: #dddddd;
+      border-radius: 0em 2em 2em 0em;
+      padding: 2em;
+    }
+    ul {
+      list-style-type: none;
     }
 </style>
 <script>
-    let { sidebar_tasks } = $props()
+    import { socketState } from "../socket.svelte";
+
+    let { sidebar_tasks = [], sidebar_task_chosen = [] } = $props();
+
+    function toggle_Checkbox(toggledTask) {
+      socketState.toggleCheckbox(toggledTask);
+    }
+
 </script>
 <div id="ChoseTasksDiv">
-  <ul id="ChoseTasks">
-    <li>"Wann kommen alle Einträge? in ChooseTasks.svelte"</li>
-    <li>""--{ sidebar_tasks }--""</li>
-    {#each sidebar_tasks as task}
-    <li><option>{task}</option></li>
-    {/each}
-    <li>na hier drüber</li>
-    <li>aoisjdom</li>
-  </ul>
+  <form method="POST" action="?/checkboxes">
+    <ul id="ChoseTasks">
+      <li>""--{ sidebar_tasks }--""</li>
+      {#each sidebar_tasks as task, i}
+      <li><label><input ontoggle={toggle_Checkbox(task)} type="checkbox" value="{task}" bind:group={sidebar_task_chosen} checked={sidebar_task_chosen[i]}/>{task}</label></li>
+      {/each}
+    </ul>
+    <h3>{sidebar_task_chosen}</h3>
+    	<button formaction="?/">Aktualisieren</button>
+  </form>
 </div>

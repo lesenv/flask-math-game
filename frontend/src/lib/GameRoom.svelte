@@ -23,14 +23,11 @@
   <input type="number" bind:value={result} bind:this={inputRef} />
   <button type="submit" style="display: none;">Solve</button>
 </form>
-<ul>
-  <li>poesjfdpm in GameRoom</li>
-  <li>oihasdom</li>
-</ul>
 </div>
 <style>
   div {
     background-color: #bbbbbb;
-    padding: 2em
+    padding: 2em;
+    border-radius: 2em 0 0 2em;
   }
 </style>
