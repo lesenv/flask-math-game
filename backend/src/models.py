@@ -125,8 +125,6 @@ class Match(Room):
     
     def apply_tasks(self, task_bools):
         for t,v in task_bools.items():
-            if t not in self._enabled_tasks:
-                ValueError('Unknown task: {t}')
             self._enabled_tasks[t] = v
     
     @property
