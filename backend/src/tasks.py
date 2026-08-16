@@ -69,6 +69,36 @@ class Division(Task):
             'str': self.string()
         }
 
+class PlusMinusBis10(Task):
+    def __init__(self, c = None, b = None):
+        if not c:
+            c = random.randint(1,10)
+        if not b:
+            b = random.randint(1,c)
+        self.a = c-b
+        self.b = b
+        self.c = c
+
+    def new_task(self):
+        c = random.randint(1,10)
+        b = random.randint(1,c)
+        return c, b
+
+    def string(self):
+        return f"{self.a} + {self.b}"
+
+    def check(self, num):
+        return num == self.c
+
+    def _asdict(self):
+        return {
+            'a': self.a,
+            'b': self.b,
+            'c': self.c,
+            'str': self.string()
+        }
+
+
 ## WHY is this not working anymore?
 ## not even with 
 ##    tasks[cls.__name__] = cls(*cls.new_task(cls))
@@ -85,7 +115,8 @@ def choose_task(task):
         "Division": Division(
             random.randint(1,10),
             random.randint(1,10)
-        )
+        ),
+        "PlusMinusBis10": PlusMinusBis10()
     }
     return tasks_here[task]
 

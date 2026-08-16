@@ -1,5 +1,5 @@
-import secrets, string
-from tasks import choose_task, all_tasks
+import secrets, string, random
+from tasks import choose_task, all_tasks, Division
 
 class User:
     def __init__(self, sid, username, points=0):
@@ -144,9 +144,6 @@ class Match(Room):
         self._attempts = value
 
     def create_task(self):
-        import random
-        from tasks import Division
-
         available_tasks = [t for t,s in self.enabled_tasks.items() if s]
         task = random.choice(available_tasks or [Division])
         self._task = choose_task(task)
