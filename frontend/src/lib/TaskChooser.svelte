@@ -10,7 +10,6 @@
 		event.preventDefault();
 		socketState.updateTasks(enabled_tasks);
 	}
-
 </script>
 
 <form onsubmit={handleSubmit} name="task-form">
