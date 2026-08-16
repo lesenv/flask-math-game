@@ -1,6 +1,5 @@
 import secrets, string, random
-from tasks import choose_task, all_tasks, Division
-
+from tasks import choose_task, all_tasks
 class User:
     def __init__(self, sid, username, points=0):
         self._sid = sid
@@ -110,6 +109,8 @@ class Room:
                 return v
         return None
 
+MAX_TASK_ATTEMPTS = 3
+MAX_ROUNDS = 10
 
 class Match(Room):
     def __init__(self, code):
@@ -128,8 +129,8 @@ class Match(Room):
                 ValueError('Unknown task: {t}')
             self._enabled_tasks[t] = v
 
-        if all(not v for _,v in task_bools.items()):
-            self._enabled_tasks[v] = True # 'Division'??
+        #if all(not v for _,v in task_bools.items()):
+        #    self._enabled_tasks[v] = True
     
     @property
     def is_current_task_enabled(self):
@@ -145,7 +146,7 @@ class Match(Room):
 
     def create_task(self):
         available_tasks = [t for t,s in self.enabled_tasks.items() if s]
-        task = random.choice(available_tasks or [Division])
+        task = random.choice(available_tasks)
         self._task = choose_task(task)
         return self._task
 
