@@ -128,9 +128,6 @@ class Match(Room):
             if t not in self._enabled_tasks:
                 ValueError('Unknown task: {t}')
             self._enabled_tasks[t] = v
-
-        #if all(not v for _,v in task_bools.items()):
-        #    self._enabled_tasks[v] = True
     
     @property
     def is_current_task_enabled(self):
