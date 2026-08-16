@@ -117,40 +117,40 @@
 <style>
 
 .main-layout {
-  display: flex; 
-  flex-direction: column;
-  width: 100vw; 
-  height: 100vh; 
+	display: flex; 
+	flex-direction: column;
+	width: 100vw; 
+	height: 100vh; 
 }
 
 .top-bar {
-  flex-shrink: 0; 
-  padding: 1.2rem 1rem; 
-  border-bottom: 1px solid black;
-  display: flex; 
-  gap: 1rem;
+	flex-shrink: 0; 
+	padding: 1.2rem 1rem; 
+	border-bottom: 1px solid black;
+	display: flex; 
+	gap: 1rem;
 }
 
 .main-container {
-  display: flex; 
-  flex: 1;
+	display: flex; 
+	flex: 1;
 }
 
 .main-content {
-  flex: 1;
-  overflow-y: auto;
-  display: flex;
-  justify-content: center; 
-  align-items: center; 
-  height: 100%;
-  box-sizing: border-box;
+	flex: 1;
+	overflow-y: auto;
+	display: flex;
+	justify-content: center; 
+	align-items: center; 
+	height: 100%;
+	box-sizing: border-box;
 }
 
 .sidebar {
-  flex: 0 0 240px;
-  overflow-y: auto;
-  padding: 0;
-  border-right: 1px solid black;
+	flex: 0 0 240px;
+	overflow-y: auto;
+	padding: 0;
+	border-right: 1px solid black;
 }
 
 .sidebar-right {
@@ -159,7 +159,29 @@
 }
 
 .spacer {
-  flex-grow: 1;
+	flex-grow: 1;
+}
+
+.game-over {
+	text-align: center;
+	width: min(500px, 90%);
+}
+
+.results {
+	margin: 1rem 0;
+	border: 1px solid black;
+	border-radius: 3px;
+}
+
+.result-row {
+	display: flex;
+	justify-content: space-between;
+	padding: 0.64rem;
+	border-bottom: 1px solid #ddd;
+}
+
+.result-row:last-child {
+	border-bottom: none;
 }
 
 </style>

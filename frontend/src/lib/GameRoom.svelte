@@ -1,10 +1,10 @@
 <script>
-  import { socketState } from '../socket.svelte';
+	import { socketState } from '../socket.svelte';
 
-  let { match } = $props();
+	let { match } = $props();
 
-  let result = $state();
-  let inputRef = $state(null);
+	let result = $state();
+	let inputRef = $state(null);
 
   function handleSubmit(event) {
   	event.preventDefault();
@@ -12,22 +12,29 @@
     result = null;
   }
 
-  $effect(() => {
-    inputRef?.focus();
-  });
+	$effect(() => {
+		inputRef?.focus();
+	});
 
 </script>
-<div>
-<form onsubmit={handleSubmit}>
-  {match.task.str} = 
-  <input type="number" bind:value={result} bind:this={inputRef} />
-  <button type="submit" style="display: none;">Solve</button>
+
+<form onsubmit={handleSubmit} class="task-form">
+	<div>
+		<span>{match.task.expr}</span>
+	</div>
+	<div>
+		<input type="text" bind:value={result} bind:this={inputRef} pattern="\s*[0-9]+(?:\s*/\s*[0-9]+)?\s*" />
+	</div>
+	<div>
+		<button type="submit" style="display: none;">Solve</button>
+	</div>
 </form>
-</div>
+
 <style>
-  div {
-    background-color: #bbbbbb;
-    padding: 2em;
-    border-radius: 2em 0 0 2em;
-  }
+	.task-form {
+		display: flex; 
+		flex-direction: column; 
+		align-items: center; 
+		gap: 10px;
+	}
 </style>

@@ -9,9 +9,9 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "@sveltejs/vite-plugin-svelte": "^7.1.2",
-    "svelte": "^5.56.4",
-    "vite": "^8.1.1"
+    "@sveltejs/vite-plugin-svelte": "^7.3.0",
+    "svelte": "^5.56.8",
+    "vite": "^8.2.1"
   },
   "dependencies": {
     "socket.io-client": "^4.8.3"

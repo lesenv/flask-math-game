@@ -109,6 +109,8 @@ class Room:
                 return v
         return None
 
+MAX_TASK_ATTEMPTS = 3
+MAX_ROUNDS = 10
 
 class Match(Room):
     def __init__(self, code):
