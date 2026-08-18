@@ -252,15 +252,10 @@ def on_tasks_state(data):
 			}, 
 			room=room.code
 		)
-
-
-
-
-
-
+		
 if __name__ == "__main__":
 	logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s %(message)s',
                     handlers=[logging.StreamHandler()])
-	logging.debug('This message should go to the log file and to the console')
+	logging.debug('This message should go to the console')
 	socketio.run(app, debug=True)
