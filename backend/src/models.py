@@ -1,10 +1,25 @@
 import secrets, string, random
 from tasks import choose_task, all_tasks
+import json
+
 class User:
     def __init__(self, sid, username, points=0):
         self._sid = sid
         self._username = username
         self._points = points
+        self._saved_tasks = self._get_saved_tasks()
+
+    def _get_saved_tasks(self):
+        try:
+            with open("./backend/src/saved_tasks.json", "r") as js:
+                saved_tasks = json.load(js)[self._username]
+        except KeyError:
+            saved_tasks = None
+        return saved_tasks
+
+    @property
+    def saved_tasks(self):
+        return self._saved_tasks
 
     @property
     def sid(self):

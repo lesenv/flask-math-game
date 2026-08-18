@@ -93,6 +93,11 @@ def on_join(data):
 		room = _Match.create()
 	room.add_member(user)
 
+	print(user, user.saved_tasks)
+	if user.saved_tasks:
+		for t in room.enabled_tasks:
+			room.enabled_tasks[t] = True if t in user.saved_tasks else False
+
 	join_room(room.code)
 	session['code'] = room.code
 
