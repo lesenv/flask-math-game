@@ -7,10 +7,7 @@
   let direct = $state("");
 
   function direct_login(event) {
-    direct = event.target.name
-    console.log("XXXXXXXXXXXXXXXX\n", event, "YYYYYYY\n\n", direct)
-    console.log("event\n", event, "\ntarget\n", event.target, "\ndirect:\n", direct)
-    username = event.target.name
+    username = event.submitter.value
     handleSubmit(event)
   }
 
@@ -36,14 +33,10 @@
         </div>
     </form>
     <div id="direct_login">
-        <form onsubmit={direct_login}  name="Mio">
+        <form onsubmit={direct_login} >
             <label title="Mio">
-                <button type="submit">Mio</button>
-            </label>
-        </form>
-        <form onsubmit={direct_login}  name="Jari">
-            <label title="Mio">
-                <button type="submit">Jari</button>
+                <button type="submit" value="Mio">Mio</button>
+                <button type="submit" value="Jari">Jari</button>
             </label>
         </form>
     </div>
