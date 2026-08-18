@@ -136,10 +136,10 @@ class Match(Room):
         return self._enabled_tasks[type(self._task).__name__]
 
     @property
-    def attemmpts(self):
+    def attempts(self):
         return self._attempts
 
-    @attemmpts.setter
+    @attempts.setter
     def attempts(self, value):
         self._attempts = value
 
