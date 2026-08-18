@@ -252,7 +252,7 @@ def on_tasks_state(data):
 			}, 
 			room=room.code
 		)
-		
+
 if __name__ == "__main__":
 	logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s %(message)s',
