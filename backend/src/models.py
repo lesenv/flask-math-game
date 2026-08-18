@@ -11,8 +11,8 @@ class User:
 
     def _get_saved_tasks(self):
         try:
-            with open("./backend/src/saved_tasks.json", "r") as js:
-                saved_tasks = json.load(js)[self._username]
+            with open("./backend/src/saves.json", "r") as js:
+                saved_tasks = json.load(js)[self._username]["enabled_tasks"]
         except KeyError:
             saved_tasks = None
         return saved_tasks
