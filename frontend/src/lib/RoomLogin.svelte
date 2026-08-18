@@ -22,7 +22,7 @@
 
 <div style="margin: auto; width: 240px;">
     <p style="margin-bottom: 1.3rem;">Please enter a username and, optionally, a room name to join.</p>
-    <form onsubmit={handleSubmit} >
+    <form id="direct_login" onsubmit={handleSubmit} >
         <div class="form-control" style="margin-bottom: 0;">
             <label for="username" class="src-only">Username</label>
             <input id="username" bind:value={username} placeholder="Username" />
@@ -35,14 +35,26 @@
             <button type="submit" >Join</button>
         </div>
     </form>
-    <form onsubmit={direct_login}  name="Mio">
-        <label title="Mio">
-            <button type="submit">Mio</button>
-        </label>
-    </form>
+    <div id="direct_login">
+        <form onsubmit={direct_login}  name="Mio">
+            <label title="Mio">
+                <button type="submit">Mio</button>
+            </label>
+        </form>
+        <form onsubmit={direct_login}  name="Jari">
+            <label title="Mio">
+                <button type="submit">Jari</button>
+            </label>
+        </form>
+    </div>
 </div>
 
 <style>
+
+#direct_login {
+    float: left;
+    display:inline!important;
+}
 
 .src-only {
     display: none;
