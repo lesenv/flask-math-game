@@ -4,6 +4,15 @@
 
   let username = $state("");
   let roomname = $state("");
+  let direct = $state("");
+
+  function direct_login(event) {
+    direct = event.target.name
+    console.log("XXXXXXXXXXXXXXXX\n", event, "YYYYYYY\n\n", direct)
+    console.log("event\n", event, "\ntarget\n", event.target, "\ndirect:\n", direct)
+    username = event.target.name
+    handleSubmit(event)
+  }
 
   function handleSubmit(event) {
   	event.preventDefault();
@@ -13,9 +22,7 @@
 
 <div style="margin: auto; width: 240px;">
     <p style="margin-bottom: 1.3rem;">Please enter a username and, optionally, a room name to join.</p>
-    <form
-        onsubmit={handleSubmit}
-    >
+    <form onsubmit={handleSubmit} >
         <div class="form-control" style="margin-bottom: 0;">
             <label for="username" class="src-only">Username</label>
             <input id="username" bind:value={username} placeholder="Username" />
@@ -25,8 +32,13 @@
             <input id="roomname" bind:value={roomname} placeholder="Roomname" />
         </div>
         <div class="form-control">
-            <button type="submit">Join</button>
+            <button type="submit" >Join</button>
         </div>
+    </form>
+    <form onsubmit={direct_login}  name="Mio">
+        <label title="Mio">
+            <button type="submit">Mio</button>
+        </label>
     </form>
 </div>
 
