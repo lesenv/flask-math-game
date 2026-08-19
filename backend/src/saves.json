@@ -1,6 +1,6 @@
 {
     "Mio": {
-        "enabled_tasks": ["Division"]
+        "enabled_tasks": ["Division", "plus_bis_10"]
     },
     "Jari": {
         "enabled_tasks": ["plus_bis_10"]
