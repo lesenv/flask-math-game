@@ -6,7 +6,7 @@
 <div>Leben:
 	<span>
     	{#each { length: points/10 }, count}
-		    <img src={heart_string} width="40px" alt="O" />
+		    <img src={heart_string} width="{40+count*2}px" alt="O" />
 			{#if (count+1)%10==0} {heart_string = "../../public/heart.jpg"} <br />{/if}
 	    {/each}
 		{#each { length: attempts }} <em>X</em>{/each}
