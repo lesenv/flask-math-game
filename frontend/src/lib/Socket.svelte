@@ -87,7 +87,7 @@
     {#snippet close()}
       <div class="main-layout">
         <div class="top-bar">
-          <Points points={user.points} />
+          <Points points={ user.points } attempts = { match.attempts } />
           <div class="spacer"></div>
           <div>Room: <span>{room.code}</span></div>
           <div><button type="button" onclick={ leave }>Leave</button></div>
