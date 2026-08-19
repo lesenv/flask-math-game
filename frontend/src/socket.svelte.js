@@ -7,7 +7,9 @@ class SocketState {
 	connect() {
 		if (this.socket) return this.socket;
 
-		this.socket = io();
+		this.socket = io({
+            withCredentials: true
+        });
 		return this.socket;
 	}
 

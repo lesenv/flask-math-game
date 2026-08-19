@@ -10,15 +10,18 @@ app = Flask(__name__,
 
 app.config.from_mapping(
 	SECRET_KEY='your secret here', 
-	SESSION_TYPE='filesystem' 
+	SESSION_TYPE='filesystem', 
 )
 
+Session(app)						# !!!
+
 socketio = SocketIO(app,
-	manage_session=True, 
+	manage_session=False, 			# !!!
 	cors_allowed_origins=[
 		'http://127.0.0.1:5000', 
-		'http://localhost:5173', 
-	]
+		'http://127.0.0.1:5173',	# !!!
+	], 
+	cors_credentials=True			# !!!
 )
 
 @app.route('/')
@@ -33,7 +36,8 @@ def dev_index():
 
 @socketio.on('connect')
 def on_connect():
-	session.clear()
+	#session.clear()
+	pass
 
 @socketio.on('disconnect')
 def on_disconnect():
@@ -92,13 +96,18 @@ def on_join(data):
 	if not room or room.is_closed:
 		room = _Match.create()
 	room.add_member(user)
-	
+
 	if user.saved_tasks:
 		for t in room.enabled_tasks:
 			room.enabled_tasks[t] = True if t in user.saved_tasks else False
 
 	join_room(room.code)
 	session['code'] = room.code
+	try:
+		enabled_tasks = session.get('tasks', room.enabled_tasks)
+		room.apply_tasks(enabled_tasks)
+	except ValueError:
+		pass
 
 	emit('message', {'msg': f'{user.username} has joined room {room.code}'}, room=room.code)
 
@@ -233,6 +242,7 @@ def on_tasks_state(data):
 
 	enabled_tasks = data.get('enabled_tasks', {})
 	room.apply_tasks(enabled_tasks)
+	session['tasks'] = room.enabled_tasks
 
 	emit('room', 
 		{ 
