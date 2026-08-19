@@ -92,8 +92,7 @@ def on_join(data):
 	if not room or room.is_closed:
 		room = _Match.create()
 	room.add_member(user)
-
-	print(user, user.saved_tasks)
+	
 	if user.saved_tasks:
 		for t in room.enabled_tasks:
 			room.enabled_tasks[t] = True if t in user.saved_tasks else False
@@ -222,6 +221,9 @@ def on_solve(data):
 		user.points += 10
 		emit('user', { 'username': user.username, 'sid': user.sid, 'points': user.points }, room=room.code) #user.sid)
 		# <- room ?
+	else:
+		user.points -= 10 if user.points >= 10 else 0
+
 
 @socketio.on('tasks_state')
 def on_tasks_state(data):
