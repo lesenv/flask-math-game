@@ -10,6 +10,7 @@
   import Countdown from './Countdown.svelte'
   import TaskChooser from './TaskChooser.svelte';
   import { onMount } from 'svelte';
+    import WonScreen from './WonScreen.svelte';
 
   let match = $state();
   let enabled_tasks = $state({}); 
@@ -63,9 +64,12 @@
 </script>
 
 <div>
-  <RoomGuard joined={user.username} closed={room.state === 'closed'}>
+  <RoomGuard joined={user.username} closed={room.state === 'closed'} won_bool={room.won === true}>
     {#snippet join()}
       <RoomLogin />
+    {/snippet}
+    {#snippet won()}
+      <WonScreen username={user.name}/>
     {/snippet}
     {#snippet open()}
       <div class="main-layout">

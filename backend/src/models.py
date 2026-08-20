@@ -67,6 +67,7 @@ class Room:
     def __init__(self, code):
         self._code = code
         self._members = {}
+        self.won = False
 
     def __len__(self):
         return len(self._members)

@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "svelte-confetti": "^2.3.2"
+  }
+}

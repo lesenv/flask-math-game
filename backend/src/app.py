@@ -219,6 +219,25 @@ def on_solve(data):
 	)
 	if success:
 		user.points += 10
+		# won?
+		if user.points == 100:
+			emit('room', 
+						{ 
+							'state': 'open', 
+							'code': room.code, 
+							'members': [
+								{ 
+									'sid': m.sid, 
+									'username': m.username, 
+									'points': m.points
+								} for m in room._members.values()
+							],
+							'enabled_tasks': room.enabled_tasks,
+							'won': True
+						}, 
+						room=room.code
+					)
+			emit('user', { 'username': user.username, 'sid': user.sid, 'points': user.points }, room=room.code) #user.sid)
 		emit('user', { 'username': user.username, 'sid': user.sid, 'points': user.points }, room=room.code) #user.sid)
 		# <- room ?
 	else:
