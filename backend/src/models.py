@@ -144,7 +144,7 @@ class Match(Room):
 
         # if no task is chosen, take a default one
         if all(not v for _, v in task_bools.items()):
-            self._enabled_tasks["Division"] = True
+            self._enabled_tasks[self._enabled_tasks[0]] = True
     
     @property
     def is_current_task_enabled(self):
