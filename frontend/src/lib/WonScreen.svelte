@@ -4,7 +4,7 @@
     import { socketState } from '../socket.svelte';
 
 	function resume_playing() {
-		socketState.new_game()
+		socketState.resume_game_after_won()
 	}
 </script>
 

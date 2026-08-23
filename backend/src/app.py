@@ -67,14 +67,14 @@ def on_disconnect():
 
 	user and user.remove()
 
-@socketio.on('new_game')
-def new_game(data):
-	print(f"NEW GAME\ndata received: {data}\nsession code room: {Room.code}")
+@socketio.on('resume_game_after_won')
+def resume_game_after_won(data="NIX"):
+	print(f"RESUME AFTER WON\ndata received: {data}\nsession code room: {Room.code}")
 	user = User.find_by_sid(request.sid)
 	room = Room.find_by_code(session.pop('code', None))
-	print(f"NEW GAME\nuser: {user.username}\nroom: {room}\nwon: {room.won}")
+	print(f"RESUME AFTER WON\nuser: {user.username}\nroom: {room}\nwon: {room.won}")
 	user.points += 10
-	print(f"NEW GAME joining by emitting a new game")
+	print(f"RESUME AFTER WON joining by emitting a new game")
 	emit('user', { 'username': user.username, 'sid': user.sid, 'points': user.points }, room=room.code)
 	print(f"emitted user {user}")
 	emit('room', 

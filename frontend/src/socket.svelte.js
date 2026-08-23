@@ -36,8 +36,8 @@ class SocketState {
         this.socket?.emit("tasks_state", { enabled_tasks }); 
     }
 
-	new_game() {
-		this.socket?.emit("new_game", {});
+	resume_game_after_won() {
+		this.socket?.emit("resume_game_after_won", {});
 	}
 }
 
