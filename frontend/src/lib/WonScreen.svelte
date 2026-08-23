@@ -19,7 +19,9 @@
   amount={100} 
 />
 <div id="leftie">
-	Schön, dass Du wieder vorbeigeschaut hast!
+	Schön, dass Du wieder vorbeigeschaut hast!<br />
+
+	<button onclick={resume_playing}>WEITER BITTE</button>
 </div>
 <div id="rightie">
 	Und jetzt kannst Du wieder springen, laufen, tanzen!<br />
@@ -27,9 +29,6 @@
 </div>
 
 <div>
-	<form onsubmit={resume_playing} name="task-form">
-		<button type="submit">WEITER BITTE</button>
-	</form>
 </div>
 
 <style>
@@ -38,7 +37,8 @@
 	h2 {color: blue;}
 	#leftie { 
 		float: left;
-		text-align: left;
+		text-align: center;
+		vertical-align: bottom;
 		color: #aaa;
 		background-color: greenyellow;
 		border-radius: 4em;
