@@ -37,6 +37,7 @@
             <label title="Mio">
                 <button type="submit" value="Mio">Mio</button>
                 <button type="submit" value="Jari">Jari</button>
+                <button type="submit" value="MEINS">MEINS</button>
             </label>
         </form>
     </div>

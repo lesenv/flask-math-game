@@ -35,6 +35,10 @@ class SocketState {
     updateTasks(enabled_tasks) {
         this.socket?.emit("tasks_state", { enabled_tasks }); 
     }
+
+	new_game() {
+		this.socket?.emit("new_game", {});
+	}
 }
 
 export const socketState = new SocketState();

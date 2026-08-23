@@ -67,6 +67,36 @@ def on_disconnect():
 
 	user and user.remove()
 
+@socketio.on('new_game')
+def new_game(data):
+	print(f"NEW GAME\ndata received: {data}\nsession code room: {Room.code}")
+	user = User.find_by_sid(request.sid)
+	room = Room.find_by_code(session.pop('code', None))
+	print(f"NEW GAME\nuser: {user.username}\nroom: {room}\nwon: {room.won}")
+	user.points += 10
+	print(f"NEW GAME joining by emitting a new game")
+	emit('user', { 'username': user.username, 'sid': user.sid, 'points': user.points }, room=room.code)
+	print(f"emitted user {user}")
+	emit('room', 
+				{ 
+					'state': 'closed', 
+					'code': room.code, 
+					'members': [
+						{ 
+							'sid': m.sid, 
+							'username': m.username, 
+							'points': m.points
+						} for m in room._members.values()
+					],
+					'enabled_tasks': room.enabled_tasks,
+					'won': False
+	
+				},
+				room=room.code
+			)
+	print(f"emitted and room {room}")
+
+
 
 @socketio.on('join')
 def on_join(data):
@@ -104,7 +134,12 @@ def on_join(data):
 
 	if room.is_closed:
 		# Start the match here!
-		room.reset_points()
+
+    	# shortcut for the work with the restarting after the big WIN
+		if user.username == "MEINS":
+			user.points = 90
+		else:
+			room.reset_points()
 
 		emit('room', 
 			{ 
@@ -220,7 +255,7 @@ def on_solve(data):
 	if success:
 		user.points += 10
 		# won?
-		if user.points == 100:
+		if user.points%100 == 0:
 			emit('room', 
 						{ 
 							'state': 'open', 
@@ -237,9 +272,7 @@ def on_solve(data):
 						}, 
 						room=room.code
 					)
-			emit('user', { 'username': user.username, 'sid': user.sid, 'points': user.points }, room=room.code) #user.sid)
-		emit('user', { 'username': user.username, 'sid': user.sid, 'points': user.points }, room=room.code) #user.sid)
-		# <- room ?
+		emit('user', { 'username': user.username, 'sid': user.sid, 'points': user.points }, room=room.code)
 	else:
 		user.points -= 10 if user.points >= 10 else 0
 

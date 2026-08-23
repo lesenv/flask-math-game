@@ -1,25 +1,35 @@
 <script>
     import Confetti from 'svelte-confetti';
     import { user } from '../user.svelte';
-	let { username } = $props();
+    import { socketState } from '../socket.svelte';
+
+	function resume_playing() {
+		socketState.new_game()
+	}
 </script>
 
 <div>
-	<h1>GEWONNEN!!</h1><Confetti xSpread={1} duration={5000} amount={100} />
-	<h2>{user.username},<Confetti xSpread={1} duration={5000} amount={100} /> Du hast es geschafft!!</h2>
-	<h2><Confetti xSpread={1} duration={5000} amount={100} />{user.points} Punkte hast Du Dir verdient!!<Confetti xSpread={1} duration={5000} amount={100} /></h2>
+	<h1>GEWONNEN!!</h1>
+	<h2>{user.username}, Du hast es geschafft!!</h2>
+	<h2>{user.points} Punkte hast Du Dir verdient!!</h2>
 </div>
 <Confetti 
-  xSpread={1} 
+  xSpread={3} 
   duration={5000} 
   amount={100} 
 />
 <div id="leftie">
 	Schön, dass Du wieder vorbeigeschaut hast!
 </div>
-<div id="andnow">
+<div id="rightie">
 	Und jetzt kannst Du wieder springen, laufen, tanzen!<br />
 	Alles gleichzeitig?
+</div>
+
+<div>
+	<form onsubmit={resume_playing} name="task-form">
+		<button type="submit">WEITER BITTE</button>
+	</form>
 </div>
 
 <style>
@@ -34,7 +44,7 @@
 		border-radius: 4em;
 		padding: 4em;
 	}
-	#andnow {
+	#rightie {
 		float: right;
 		text-align: right;
 		color: green;

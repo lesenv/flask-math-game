@@ -4,5 +4,8 @@
     },
     "Jari": {
         "enabled_tasks": ["plus_bis_10"]
+    },
+    "MEINS": {
+        "enabled_tasks": []
     }
 }
