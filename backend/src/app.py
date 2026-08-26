@@ -35,6 +35,10 @@ def dev_index():
 @socketio.on('connect')
 def on_connect():
 	session.clear()
+	emit('room',
+	  {
+		'all_users': all_users
+	  })
 
 @socketio.on('disconnect')
 def on_disconnect():
@@ -150,8 +154,7 @@ def on_join(data):
 						'points': m.points
 					} for m in room._members.values()
 				],
-				'enabled_tasks': room.enabled_tasks,
-				'all_users': all_users
+				'enabled_tasks': room.enabled_tasks
 			}, 
 			room=room.code
 		)

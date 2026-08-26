@@ -35,10 +35,8 @@
         <button type="submit" onclick={direct_login("Mio")}>Mio</button>
         <button type="submit" onclick={direct_login("Jari")}>Jari</button>
         <button type="submit" onclick={direct_login("MEINS")}>MEINS</button>
-    </div>
-    <div>
         {#each room.all_users as one_user}
-            {one_user}<br />
+        <button type="submit" value={one_user} onclick={direct_login()}>{one_user}</button>
         {/each}
     </div>
 </div>
