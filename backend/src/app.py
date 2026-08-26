@@ -252,7 +252,7 @@ def on_solve(data):
 	if success:
 		user.points += 10
 		# won?
-		if user.points%100 == 0:
+		if user.points%100 < 10:
 			emit('room', 
 						{ 
 							'state': 'open', 
