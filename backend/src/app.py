@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, session
 from flask_session import Session
 from flask_socketio import SocketIO, emit, join_room, leave_room
 from models import Match as _Match, Room, User
+from models import all_users
 import logging
 
 app = Flask(__name__, 
@@ -138,7 +139,7 @@ def on_join(data):
 		else:
 			room.reset_points()
 
-		emit('room', 
+		emit('room',
 			{ 
 				'state': 'closed', 
 				'code': room.code, 
@@ -149,8 +150,8 @@ def on_join(data):
 						'points': m.points
 					} for m in room._members.values()
 				],
-				'enabled_tasks': room.enabled_tasks
-
+				'enabled_tasks': room.enabled_tasks,
+				'all_users': all_users
 			}, 
 			room=room.code
 		)

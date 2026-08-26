@@ -1,6 +1,6 @@
 <script>
   import { socketState } from '../socket.svelte';
-  import { user } from '../user.svelte';
+  import { room } from '../room.svelte';
 
   let username = $state("");
   let roomname = $state("");
@@ -35,6 +35,11 @@
         <button type="submit" onclick={direct_login("Mio")}>Mio</button>
         <button type="submit" onclick={direct_login("Jari")}>Jari</button>
         <button type="submit" onclick={direct_login("MEINS")}>MEINS</button>
+    </div>
+    <div>
+        {#each room.all_users as one_user}
+            {one_user}<br />
+        {/each}
     </div>
 </div>
 

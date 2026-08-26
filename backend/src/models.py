@@ -2,6 +2,13 @@ import secrets, string, random
 from tasks import choose_task, all_tasks
 import json
 
+try:
+    with open("./backend/src/saves.json", "r") as js:
+        all_users = [str(name) for name in json.load(js).keys()]
+except KeyError:
+        all_users = None
+print(f"IN MODELS.PY: all_users = {all_users}")
+
 class User:
     def __init__(self, sid, username, points=0):
         self._sid = sid
