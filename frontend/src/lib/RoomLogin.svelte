@@ -6,9 +6,8 @@
   let roomname = $state("");
   let direct = $state("");
 
-  function direct_login(event) {
-    username = event.submitter.value
-    handleSubmit(event)
+  function direct_login(name) {
+  	socketState.joinRoom(name, roomname);
   }
 
   function handleSubmit(event) {
@@ -33,13 +32,9 @@
         </div>
     </form>
     <div id="direct_login">
-        <form onsubmit={direct_login} >
-            <label title="Mio">
-                <button type="submit" value="Mio">Mio</button>
-                <button type="submit" value="Jari">Jari</button>
-                <button type="submit" value="MEINS">MEINS</button>
-            </label>
-        </form>
+        <button type="submit" onclick={direct_login("Mio")}>Mio</button>
+        <button type="submit" onclick={direct_login("Jari")}>Jari</button>
+        <button type="submit" onclick={direct_login("MEINS")}>MEINS</button>
     </div>
 </div>
 
@@ -78,6 +73,10 @@ input#username {
 input#roomname {
     border-top-right-radius: 0;
     border-top-left-radius: 0;
+}
+
+button {
+    display: inline!important;
 }
 
 </style>
