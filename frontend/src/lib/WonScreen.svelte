@@ -6,10 +6,6 @@
 	function resume_playing() {
 		socketState.resume_game_after_won()
 	}
-
-    let el = document.querySelector("btn_resume");
-	console.log(el);
-	el.focus();
 </script>
 
 <div>
@@ -25,7 +21,7 @@
 <div id="leftie">
 	Schön, dass Du wieder vorbeigeschaut hast!<br />
 
-	<button onclick={resume_playing} class="btn_resume">WEITER BITTE</button>
+	<button onclick={resume_playing} name="btn_resume" autofocus>WEITER BITTE</button>
 </div>
 <div id="rightie">
 	Und jetzt kannst Du wieder springen, laufen, tanzen!<br />
