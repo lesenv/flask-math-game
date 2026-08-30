@@ -6,6 +6,10 @@
 	function resume_playing() {
 		socketState.resume_game_after_won()
 	}
+
+    let el = document.querySelector("btn_resume");
+	console.log(el);
+	el.focus();
 </script>
 
 <div>
@@ -14,14 +18,14 @@
 	<h2>{user.points} Punkte hast Du Dir verdient!!</h2>
 </div>
 <Confetti 
-  xSpread={3} 
+  xSpread={8} 
   duration={5000} 
-  amount={100} 
+  amount={1000} 
 />
 <div id="leftie">
 	Schön, dass Du wieder vorbeigeschaut hast!<br />
 
-	<button onclick={resume_playing}>WEITER BITTE</button>
+	<button onclick={resume_playing} class="btn_resume">WEITER BITTE</button>
 </div>
 <div id="rightie">
 	Und jetzt kannst Du wieder springen, laufen, tanzen!<br />

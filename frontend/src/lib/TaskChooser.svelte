@@ -9,6 +9,13 @@
 	function handleSubmit(event) {
 		event.preventDefault();
 		socketState.updateTasks(enabled_tasks);
+		select_input_text();
+	}
+
+	function select_input_text() {
+		let el = document.getElementsByName("inputText")[0];
+		console.log(el);
+		el.focus();
 	}
 </script>
 

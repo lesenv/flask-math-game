@@ -20,7 +20,7 @@
 <div>
 <form onsubmit={handleSubmit}>
   {match.task.str} = 
-  <input type="number" bind:value={result} bind:this={inputRef} />
+  <input type="number" name="inputText" bind:value={result} bind:this={inputRef} />
   <button type="submit" style="display: none;">Solve</button>
 </form>
 </div>
