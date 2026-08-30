@@ -4,10 +4,9 @@
 
   let username = $state("");
   let roomname = $state("");
-  let direct = $state("");
 
-  function direct_login(name) {
-  	socketState.joinRoom(name, roomname);
+  function direct_login_generic(event) {
+  	socketState.joinRoom(event.target.name, roomname);
   }
 
   function handleSubmit(event) {
@@ -15,8 +14,8 @@
   	socketState.joinRoom(username, roomname);
   }
 </script>
-
 <div style="margin: auto; width: 240px;">
+ <!--
     <p style="margin-bottom: 1.3rem;">Please enter a username and, optionally, a room name to join.</p>
     <form id="direct_login" onsubmit={handleSubmit} >
         <div class="form-control" style="margin-bottom: 0;">
@@ -31,12 +30,10 @@
             <button type="submit" >Join</button>
         </div>
     </form>
+-->
     <div id="direct_login">
-        <button type="submit" onclick={direct_login("Mio")}>Mio</button>
-        <button type="submit" onclick={direct_login("Jari")}>Jari</button>
-        <button type="submit" onclick={direct_login("MEINS")}>MEINS</button>
         {#each room.all_users as one_user}
-        <button type="submit" value={one_user} onclick={direct_login()}>{one_user}</button>
+            <button type="submit" name={one_user} onclick={direct_login_generic}>{one_user}</button>
         {/each}
     </div>
 </div>

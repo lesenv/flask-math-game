@@ -78,7 +78,6 @@ def resume_game_after_won(data):
 	user = User.find_by_sid(request.sid)
 	user.points += 1
 	emit('user', { 'username': user.username, 'sid': user.sid, 'points': user.points }, room=room.code)
-	print(f"emitted user {user}")
 	emit('room', 
 				{ 
 					'state': 'closed', 
@@ -96,7 +95,6 @@ def resume_game_after_won(data):
 				},
 				room=room.code
 			)
-	print(f"emitted and room {room}")
 
 
 
@@ -274,8 +272,9 @@ def on_solve(data):
 						room=room.code
 					)
 		emit('user', { 'username': user.username, 'sid': user.sid, 'points': user.points }, room=room.code)
-	else:
-		user.points -= 10 if user.points >= 10 else 0
+	# no points substracting if wrong answer
+	# else:
+	#	user.points -= 10 if user.points >= 10 else 0
 
 
 @socketio.on('tasks_state')

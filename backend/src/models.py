@@ -7,7 +7,6 @@ try:
         all_users = [str(name) for name in json.load(js).keys()]
 except KeyError:
         all_users = None
-print(f"IN MODELS.PY: all_users = {all_users}")
 
 class User:
     def __init__(self, sid, username, points=0):

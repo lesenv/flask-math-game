@@ -28,7 +28,6 @@
     });
 
     const onRoom = (data) => {
-        console.log(data);
         Object.assign(room, data);
         Object.assign(enabled_tasks, data.enabled_tasks);
     };
