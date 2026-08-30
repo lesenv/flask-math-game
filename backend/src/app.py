@@ -273,6 +273,7 @@ def on_solve(data):
 					)
 		emit('user', { 'username': user.username, 'sid': user.sid, 'points': user.points }, room=room.code)
 	# no points substracting if wrong answer
+	# IF there should be a retaliation, then there sould be emitted the new points of user
 	# else:
 	#	user.points -= 10 if user.points >= 10 else 0
 
