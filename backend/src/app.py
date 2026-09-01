@@ -266,7 +266,19 @@ def on_solve(data):
 									'points': m.points
 								} for m in room._members.values()
 							],
+			###
+			###
+			### localStorage instead of emitting enabled_tasks??
+			###
+			###             vvvvvvvvvvvvvvv
 							'enabled_tasks': room.enabled_tasks,
+			###             ^^^^^^^^^^^^^^^
+			###
+			### localStorage instead of emitting enabled_tasks??
+			###
+			### then what else can be stored in localStorage?
+			###
+			###
 							'won': True
 						}, 
 						room=room.code
