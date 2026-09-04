@@ -33,6 +33,7 @@ class SocketState {
     }
 
     updateTasks(enabled_tasks) {
+		localStorage.setItem('enabled_tasks', enabled_tasks)
         this.socket?.emit("tasks_state", { enabled_tasks }); 
     }
 
