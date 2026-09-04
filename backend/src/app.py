@@ -76,7 +76,6 @@ def on_disconnect():
 def resume_game_after_won(data):
 	room = Room.find_by_code(session.get('code'))
 	user = User.find_by_sid(request.sid)
-	user.points += 1
 	emit('user', { 'username': user.username, 'sid': user.sid, 'points': user.points }, room=room.code)
 	emit('room', 
 				{ 
