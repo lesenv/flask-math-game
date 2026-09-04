@@ -10,7 +10,7 @@
     	{#each { length: (points/10)%10 }, count}
 		    <img src={heart_string} width="{40+count*2}px" alt="O" />
 		{/each}
-		{#each {length: 10-(points/10)%10}, count}
+		{#each {length: 11-(points/10)%10}, count}
 			<img src={heart_grey_string} width="{40+(length-count)*2}px" alt="o" />
 	    {/each}
 		{#if points>100}
