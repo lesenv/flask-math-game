@@ -25,4 +25,7 @@
 		color: red;
 		font-weight: bold;
 	}
+	div {
+		vertical-align: middle;
+	}
 </style>
