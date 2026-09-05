@@ -1,12 +1,18 @@
 <script>
   import { socketState } from '../socket.svelte';
-  import { room } from '../room.svelte';
+
+  let { loggedUsers = $bindable(), onRemove, createNewUser } = $props(); 
 
   let username = $state("");
   let roomname = $state("");
 
-  function direct_login_generic(event) {
-  	socketState.joinRoom(event.target.name, roomname);
+  function submitLogin(name) {
+    socketState.joinRoom(name, roomname);
+  }
+
+  function newUser() {
+    let newUserName = document.getElementsByName("newUserName")[0].value;
+    createNewUser(newUserName);
   }
 
   function handleSubmit(event) {
@@ -15,65 +21,56 @@
   }
 </script>
 <div style="margin: auto; width: 240px;">
- <!--
-    <p style="margin-bottom: 1.3rem;">Please enter a username and, optionally, a room name to join.</p>
-    <form id="direct_login" onsubmit={handleSubmit} >
-        <div class="form-control" style="margin-bottom: 0;">
-            <label for="username" class="src-only">Username</label>
-            <input id="username" bind:value={username} placeholder="Username" />
+    <div id="direct_login" style="padding: 1rem 0;">
+        {#each loggedUsers.toSorted((a, b) => a.localeCompare(b)) as user}
+        <div class="button-wrapper">
+            <button type="button" class="main-button" onclick={() => submitLogin(user)}>{user}</button>
+            <button type="button" class="remove-button" onclick={() => onRemove(user)}>X</button>
         </div>
-        <div class="form-control">
-            <label for="roomname" class="src-only">Roomname</label>
-            <input id="roomname" bind:value={roomname} placeholder="Roomname" />
-        </div>
-        <div class="form-control">
-            <button type="submit" >Join</button>
-        </div>
-    </form>
--->
-    <div id="direct_login">
-        {#each room.all_users as one_user}
-            <button type="submit" name={one_user} onclick={direct_login_generic}>{one_user}</button>
         {/each}
+        <form>
+            <input name="newUserName"/><button type="submit" class="main-button" onclick={() => newUser()}>NEU</button>
+        </form>
     </div>
 </div>
 
 <style>
 
-#direct_login {
-    float: left;
-    display:inline!important;
-}
-
-.src-only {
-    display: none;
-}
-
-.form-control {
-    margin-bottom: .6em;
-}
-
-label, input, button {
-    box-sizing:border-box;
-    width: 100%;
-    padding: 1em;
-    margin: 0;
-}
-
 input {
-    border: 1px solid #505054; 
-    border-radius: 6px; 
+    display: inline;
 }
 
-input#username {
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 0;
-}
+.button-wrapper {
+    position: relative;
+    margin-bottom: 0.48rem;
+  }
 
-input#roomname {
-    border-top-right-radius: 0;
-    border-top-left-radius: 0;
-}
+  .main-button {
+    padding: 0.75rem 1.5rem;
+  }
+
+  .remove-button {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+
+    width: 20px;
+    height: 20px;
+    padding: 0;
+
+    border: none;
+    border-radius: 50%;
+    background: #e53935;
+    color: white;
+
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 20px;
+  }
+
+  .remove-button:hover {
+    background: #c62828;
+  }
 
 button {
     display: inline!important;

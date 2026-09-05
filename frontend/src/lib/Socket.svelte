@@ -23,6 +23,11 @@
     loggedUsers = LoginData.getUsers();
   }
 
+  function createUser(name) {
+    LoginData.set(name, [])
+    loggedUsers = LoginData.getUsers();
+  }
+
   function leave() {
     socketState.leaveRoom();
     Object.assign(user, {});
@@ -85,7 +90,7 @@
 <div>
   <RoomGuard joined={user.username} closed={room.state === 'closed'} won_bool={room.won === true}>
     {#snippet join()}
-       <RoomLogin bind:loggedUsers={loggedUsers} onRemove={removeUser} />
+       <RoomLogin bind:loggedUsers={loggedUsers} onRemove={removeUser} createNewUser={createUser}/>
     {/snippet}
     {#snippet won()}
       <WonScreen username={user.name}/>
