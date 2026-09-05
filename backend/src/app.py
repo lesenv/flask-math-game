@@ -61,7 +61,8 @@ def on_disconnect():
 							'username': m.username, 
 							'points': m.points
 						} for m in room._members.values()
-					]
+					],
+					'enabled_tasks': room.enabled_tasks
 				}, 
 				room=room.code
 			)
@@ -75,7 +76,6 @@ def on_disconnect():
 def resume_game_after_won(data):
 	room = Room.find_by_code(session.get('code'))
 	user = User.find_by_sid(request.sid)
-	user.points += 1
 	emit('user', { 'username': user.username, 'sid': user.sid, 'points': user.points }, room=room.code)
 	emit('room', 
 				{ 
@@ -88,6 +88,7 @@ def resume_game_after_won(data):
 							'points': m.points
 						} for m in room._members.values()
 					],
+					'enabled_tasks': room.enabled_tasks,
 					'won': False
 	
 				},
@@ -149,7 +150,8 @@ def on_join(data):
 						'username': m.username, 
 						'points': m.points
 					} for m in room._members.values()
-				]
+				],
+				'enabled_tasks': room.enabled_tasks
 			}, 
 			room=room.code
 		)
@@ -176,7 +178,8 @@ def on_join(data):
 						'username': m.username, 
 						'points': m.points
 					} for m in room._members.values()
-				]
+				],
+				'enabled_tasks': room.enabled_tasks
 			}, 
 			room=room.code
 		)
@@ -202,7 +205,8 @@ def on_leave(data):
 						'username': m.username, 
 						'points': m.points
 					} for m in room._members.values()
-				]
+				],
+				'enabled_tasks': room.enabled_tasks
 			}, 
 			room=room.code
 		)
@@ -261,24 +265,11 @@ def on_solve(data):
 									'points': m.points
 								} for m in room._members.values()
 							],
-			###
-			###
-			### localStorage instead of emitting enabled_tasks??
-			###
-			###             vvvvvvvvvvvvvvv
-			#				'enabled_tasks': room.enabled_tasks,
-			###             ^^^^^^^^^^^^^^^
-			###
-			### localStorage instead of emitting enabled_tasks??
-			###
-			### then what else can be stored in localStorage?
-			###
-			###
+							'enabled_tasks': room.enabled_tasks,
 							'won': True
 						}, 
 						room=room.code
 					)
-			localStorage
 		emit('user', { 'username': user.username, 'sid': user.sid, 'points': user.points }, room=room.code)
 	# no points substracting if wrong answer
 	# IF there should be a retaliation, then there sould be emitted the new points of user
@@ -287,7 +278,7 @@ def on_solve(data):
 
 
 @socketio.on('tasks_state')
-def on_tasks_state():
+def on_tasks_state(data):
 	room = _Match.find_by_code(session.get('code', None))
 	if room is None:
 		return 
