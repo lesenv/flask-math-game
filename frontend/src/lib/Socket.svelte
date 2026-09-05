@@ -10,10 +10,18 @@
   import Countdown from './Countdown.svelte'
   import TaskChooser from './TaskChooser.svelte';
   import { onMount } from 'svelte';
-    import WonScreen from './WonScreen.svelte';
+  import WonScreen from './WonScreen.svelte';
+  import { LoginData } from '../LoginData'
 
   let match = $state();
-  let enabled_tasks = $state({}); 
+  let enabled_tasks = $state({});
+
+  let loggedUsers = $derived.by(() => LoginData.getUsers());
+
+  function removeUser(name) {
+    LoginData.delete(name);
+    loggedUsers = LoginData.getUsers();
+  }
 
   function leave() {
     socketState.leaveRoom();
@@ -28,16 +36,28 @@
     });
 
     const onRoom = (data) => {
+        console.log(data);
         Object.assign(room, data);
         Object.assign(enabled_tasks, data.enabled_tasks);
+
+        if (data.enabled_tasks) {
+          const loginData = data.enabled_tasks;
+          LoginData.set(user.username, loginData);
+          loggedUsers = LoginData.getUsers();
+        }
     };
 
     socket.on("room", onRoom);
-
+    
     const onUser = (data) => {
       console.log("data_user", data);
       Object.assign(user, data);
       Object.assign(room.members.find((item) => item.sid === data.sid) || {}, data);
+
+      const loginData = LoginData.get(user.username);
+      if (loginData !== null && typeof loginData === "object") {
+        socketState.updateTasks(loginData);
+      }
     };
 
     socket.on("user", onUser);
@@ -65,7 +85,7 @@
 <div>
   <RoomGuard joined={user.username} closed={room.state === 'closed'} won_bool={room.won === true}>
     {#snippet join()}
-      <RoomLogin />
+       <RoomLogin bind:loggedUsers={loggedUsers} onRemove={removeUser} />
     {/snippet}
     {#snippet won()}
       <WonScreen username={user.name}/>

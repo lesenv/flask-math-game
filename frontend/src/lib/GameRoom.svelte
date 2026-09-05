@@ -25,7 +25,7 @@
 </form>
 </div>
 <style>
-  div {
+  form {
     background-color: #bbbbbb;
     padding: 2em;
     border-radius: 2em 0 0 2em;

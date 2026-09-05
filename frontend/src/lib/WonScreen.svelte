@@ -20,7 +20,6 @@
 />
 <div id="leftie">
 	Schön, dass Du wieder vorbeigeschaut hast!<br />
-
 	<button onclick={resume_playing} name="btn_resume" autofocus>WEITER BITTE</button>
 </div>
 <div id="rightie">
